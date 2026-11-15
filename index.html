@@ -664,6 +664,11 @@ var CHECK=[
 
 UI.datos.ban=["Las encuestas no se muestran entre el 24 y el 29 de noviembre: la ley electoral prohíbe publicarlas o reproducirlas en los cinco días anteriores a la votación.","Les enquestes no es mostren entre el 24 i el 29 de novembre: la llei electoral prohibeix publicar-les o reproduir-les en els cinc dies anteriors a la votació.","Polls are not shown between 24 and 29 November: electoral law bans publishing or reproducing them in the five days before the vote."];
 
+UI.vid.cmph=["Comparativas por tema","Comparatives per tema","Comparisons by topic"];
+UI.vid.cmpnote=["Un vídeo por tema con la primera propuesta de cada candidatura, en el orden del BOE. Es una selección: todas las propuestas están en las fichas.","Un vídeo per tema amb la primera proposta de cada candidatura, en l'ordre del BOE. És una selecció: totes les propostes són a les fitxes.","One video per topic with each candidature's first proposal, in official gazette order. It is a selection: all proposals are in the profiles."];
+UI.vid.cmpplay=["Ver vídeo comparativo","Veure vídeo comparatiu","Watch comparison video"];
+UI.vid.hparty=["Vídeos por candidatura","Vídeos per candidatura","Videos by candidature"];
+
 UI.nav["como-votar"]=["Cómo se vota","Com es vota","How voting works"];
 UI.how={h:["Qué votas el 29N y cómo funciona","Què votes el 29N i com funciona","What you vote on 29N and how it works"],
  lede:["El 29 de noviembre eliges las dos cámaras de las Cortes Generales, con dos votos distintos e independientes. Aquí está cómo funciona cada uno para quien vota en Barcelona.","El 29 de novembre tries les dues cambres de les Corts Generals, amb dos vots diferents i independents. Aquí tens com funciona cadascun per a qui vota a Barcelona.","On 29 November you elect both chambers of Spain's parliament, with two separate, independent votes. Here is how each works for someone voting in Barcelona."],
@@ -777,7 +782,7 @@ V.candidaturas=function(){
 };
 V.temas=function(){
   var x=T(st.topic);
-  var h='<h2>'+esc(t(UI.nav.temas))+'</h2><p class="lede">'+esc(t(UI.tema.lede))+'</p>'+topicChips()+'<p class="meta" style="margin-bottom:8px">'+esc(t(UI.tema.filter))+'</p>'+partyChips(null,true)+legend();
+  var h='<h2>'+esc(t(UI.nav.temas))+'</h2><p class="lede">'+esc(t(UI.tema.lede))+'</p>'+topicChips()+'<div class="vhost" style="margin-bottom:16px"><div class="links" style="margin-top:0"><button type="button" class="btn solid vb" data-video="cmp-'+x.id+'">\u25B6 '+esc(t(UI.vid.cmpplay))+'</button></div><div class="vslot"></div></div><p class="meta" style="margin-bottom:8px">'+esc(t(UI.tema.filter))+'</p>'+partyChips(null,true)+legend();
   h+='<div class="grid col2">'+PARTIES.filter(function(p){return !st.off[p.id];}).map(function(p){return '<div class="card pc vhost"><h4><span class="dot" style="background:'+p.color+'"></span>'+esc(p.short)+' '+pill(p)+'</h4>'+props(p.props[x.id])+vbtn(p,x)+'</div>';}).join('')+'</div>';
   return h;
 };
@@ -798,7 +803,9 @@ V.datos=function(){
   return h;
 };
 V.videos=function(){
-  var h='<h2>'+esc(t(UI.nav.videos))+'</h2><p class="lede">'+esc(t(UI.vid.own))+'</p><div class="grid col2">';
+  var h='<h2>'+esc(t(UI.nav.videos))+'</h2><p class="lede">'+esc(t(UI.vid.own))+'</p>';
+  h+='<div class="card vhost" style="margin-bottom:14px"><h3>'+esc(t(UI.vid.cmph))+'</h3><p class="meta">'+esc(t(UI.vid.cmpnote))+'</p><div class="chips" style="margin:10px 0 0">'+TOPICS.map(function(x){return '<button type="button" class="chip vb" data-video="cmp-'+x.id+'">\u25B6 '+esc(t(x.n))+'</button>';}).join('')+'</div><div class="vslot"></div></div>';
+  h+='<h2 style="margin-top:24px">'+esc(t(UI.vid.hparty))+'</h2><div class="grid col2">';
   PARTIES.forEach(function(p){var ts=TOPICS.filter(function(x){return (p.props[x.id]||[]).length;});
     h+='<div class="card pc vhost"><h4><span class="dot" style="background:'+p.color+'"></span>'+esc(p.short)+' <span style="color:var(--muted);font-weight:400">· '+ts.length+'</span></h4>'+(ts.length?'<div class="chips" style="margin:0">'+ts.map(function(x){return '<button type="button" class="chip vb" data-video="'+p.id+'-'+x.id+'">\u25B6 '+esc(t(x.n))+'</button>';}).join('')+'</div><div class="vslot"></div>':'<p class="empty">'+esc(t(UI.vid.novid))+'</p>')+'</div>';});
   return h+'</div><div class="note" style="margin-top:14px">'+esc(t(UI.vid.silent))+'</div>';

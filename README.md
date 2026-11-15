@@ -9,7 +9,7 @@ Guía informativa, independiente y trilingüe (castellano, catalán, inglés) de
 - **Cómo se vota:** qué se elige en el Congreso y en el Senado y cómo funciona cada papeleta.
 - **Candidaturas:** las 11 candidaturas al Congreso proclamadas en Barcelona, con sus propuestas en 15 temas.
 - **Temas:** comparación de lo que dice cada candidatura sobre un mismo tema.
-- **Vídeos:** un vídeo resumen narrado por candidatura y tema (336 en total, 112 por idioma), generados a partir de las mismas propuestas que muestra la guía.
+- **Vídeos:** un vídeo resumen narrado por candidatura y tema (336 en total, 112 por idioma) y un vídeo comparativo por tema (45), todos animados, generados a partir de las mismas propuestas que muestra la guía.
 - **Agenda, datos y fuentes:** fechas oficiales, debates, verificadores y todas las fuentes consultadas.
 
 ## Cómo leer las etiquetas
