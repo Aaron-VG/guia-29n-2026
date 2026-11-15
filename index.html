@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía 29N Barcelona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout idea: a civic reference binder. Sticky tab rail, one reading column, ballot-paper cards (white = Congreso, sepia = Senado). */
+  --paper:#f3f5f7; --card:#ffffff; --ink:#15213a; --muted:#56627a; --line:#d5dbe4;
+  --accent:#0c6b6b; --accent-ink:#ffffff; --sepia:#b58f52; --soft:#e7ecf1;
+  --ok:#1f7a4d; --warn:#a8650a; --none:#7a8296;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151f; --card:#18202d; --ink:#e8ecf3; --muted:#a2adc2; --line:#2c3748;
+    --accent:#4fc0bd; --accent-ink:#06201f; --sepia:#d2ad6e; --soft:#212b3a;
+    --ok:#5fd09a; --warn:#f0b35a; --none:#98a2b6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10151f; --card:#18202d; --ink:#e8ecf3; --muted:#a2adc2; --line:#2c3748;
+  --accent:#4fc0bd; --accent-ink:#06201f; --sepia:#d2ad6e; --soft:#212b3a;
+  --ok:#5fd09a; --warn:#f0b35a; --none:#98a2b6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sepia);outline-offset:2px}
+header.top{background:var(--card);border-bottom:1px solid var(--line)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px}
+.brand{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;padding:20px 0 14px}
+.brand h1{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,4.5vw,2.4rem);line-height:1.05;margin:0;text-wrap:balance}
+.brand p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.lang{display:flex;gap:4px;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--paper)}
+.lang button{border:0;background:transparent;color:var(--ink);font:600 .85rem var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+nav.tabs{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-top:6px;padding-bottom:6px}
+nav.tabs a{flex:none;text-decoration:none;color:var(--muted);font-weight:600;font-size:.92rem;padding:8px 12px;border-radius:8px}
+nav.tabs a[aria-current="page"]{background:var(--soft);color:var(--ink);box-shadow:inset 0 -3px 0 var(--accent)}
+main{padding:24px 0 64px}
+h2{font-family:var(--display);font-size:1.55rem;line-height:1.15;margin:0 0 6px;text-wrap:balance}
+h3{font-family:var(--display);font-size:1.15rem;margin:0;text-wrap:balance}
+.lede{color:var(--muted);max-width:65ch;margin:0 0 20px}
+.grid{display:grid;gap:14px}
+.facts{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.fact{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:6px;padding:12px 14px}
+.fact.sen{border-left-color:var(--sepia)}
+.ballot{border-top:6px solid var(--accent)}.ballot.sen{border-top-color:var(--sepia)}
+table td,table th{font-variant-numeric:tabular-nums}
+.fact b{display:block;font-family:var(--display);font-size:1.25rem;font-variant-numeric:tabular-nums}
+.fact span{color:var(--muted);font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px}
+.note{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.93rem}
+.tablewrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.93rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:baseline}
+.pill{display:inline-block;font-size:.76rem;font-weight:600;padding:2px 9px;border-radius:999px;border:1.5px solid currentColor;white-space:nowrap}
+.pill.pub{color:var(--ok)} .pill.pend{color:var(--warn)} .pill.no{color:var(--none)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:500 .88rem var(--body);padding:6px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.phead{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
+.phead h3{font-size:1.45rem}
+.meta{color:var(--muted);font-size:.92rem;margin:4px 0 0;max-width:70ch}
+.topic{padding:14px 0;border-bottom:1px dashed var(--line)}
+.topic:last-child{border-bottom:0}
+.topic h4{margin:0 0 6px;font:600 1rem var(--body)}
+ul.props{margin:0;padding-left:0;list-style:none;display:grid;gap:7px}
+ul.props li{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start;max-width:78ch}
+.tag{font:600 .68rem var(--body);letter-spacing:.04em;border-radius:4px;padding:2px 5px;margin-top:3px;min-width:22px;text-align:center}
+.tag.P{background:var(--ok);color:var(--card)} .tag.A{background:var(--sepia);color:var(--card)} .tag.D{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.empty{color:var(--none);font-style:italic;font-size:.93rem}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.btn{display:inline-block;text-decoration:none;font-weight:600;font-size:.85rem;border:1.5px solid var(--accent);color:var(--accent);padding:5px 10px;border-radius:6px}
+.btn.solid{background:var(--accent);color:var(--accent-ink)}
+.btn.q{border-style:dashed}
+button.btn{cursor:pointer;font-family:var(--body)}
+.vid{display:block;width:100%;max-width:340px;aspect-ratio:9/16;border-radius:12px;border:1px solid var(--line);background:var(--soft);margin-top:12px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.88rem;color:var(--muted);margin:10px 0 18px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.col2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.pc h4{margin:0 0 8px;font:600 1rem var(--body)}
+.time{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.time li{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.time li.past{opacity:.62}
+.time time{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.time small{display:block;color:var(--muted)}
+.bars{display:grid;gap:9px;margin:10px 0}
+.bar{display:grid;grid-template-columns:110px 1fr 58px;gap:10px;align-items:center;font-size:.92rem}
+.bar i{display:block;height:18px;border-radius:3px;background:var(--accent)}
+.bar .track{background:var(--soft);border-radius:3px}
+.bar b{font-variant-numeric:tabular-nums;text-align:right}
+ul.src{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.93rem}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding:18px 0 40px}
+@media (max-width:480px){.time li{grid-template-columns:1fr;gap:2px}.bar{grid-template-columns:84px 1fr 50px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap brand">
+  <div><h1 id="t-title"></h1><p id="t-sub"></p></div>
+  <div class="lang" role="group" aria-label="Idioma / Llengua / Language">
+    <button type="button" id="lang-es" data-l="0">ES</button><button type="button" id="lang-ca" data-l="1">CA</button><button type="button" id="lang-en" data-l="2">EN</button>
+  </div>
+</div></header>
+<nav class="tabs" aria-label="Secciones"><div class="wrap" id="nav"></div></nav>
+<main><div class="wrap" id="view"></div></main>
+<footer><div class="wrap" id="foot"></div></footer>
+<script>
+var UI={
+ title:["Guía 29N · Barcelona","Guia 29N · Barcelona","29N Guide · Barcelona"],
+ sub:["Qué propone cada candidatura al Congreso por Barcelona en las elecciones generales del 29 de noviembre de 2026, tema a tema y con sus fuentes.","Què proposa cada candidatura al Congrés per Barcelona a les eleccions generals del 29 de novembre de 2026, tema a tema i amb les fonts.","What each Congress candidature in Barcelona proposes for Spain's general election of 29 November 2026, topic by topic, with sources."],
+ foot:["Guía informativa independiente, sin vinculación con ningún partido. No recomienda el voto. Última revisión: 15 de noviembre de 2026. Elaborada por Aaron Verdaguer Gonzalez con Claude.","Guia informativa independent, sense vinculació amb cap partit. No recomana el vot. Darrera revisió: 15 de novembre de 2026. Elaborada per Aaron Verdaguer Gonzalez amb Claude.","Independent information guide, not affiliated with any party. It does not recommend a vote. Last reviewed: 15 November 2026. Made by Aaron Verdaguer Gonzalez using Claude."],
+ nav:{inicio:["Inicio","Inici","Overview"],candidaturas:["Candidaturas","Candidatures","Candidatures"],temas:["Temas","Temes","Topics"],agenda:["Agenda","Agenda","Calendar"],datos:["Datos","Dades","Data"],videos:["Vídeos","Vídeos","Videos"],fuentes:["Fuentes","Fonts","Sources"]},
+ status:{pub:["Programa publicado","Programa publicat","Programme published"],pend:["Programa pendiente","Programa pendent","Programme pending"],none:["Sin programa del 29N","Sense programa del 29N","No 29N programme"]},
+ tags:{P:["Programa oficial del 29N","Programa oficial del 29N","Official 29N programme"],A:["Documento anterior del partido (programa 2023, congreso, programa político)","Document anterior del partit (programa 2023, congrés, programa polític)","Earlier party document (2023 programme, congress, political programme)"],D:["Declaraciones, votaciones o acción de gobierno","Declaracions, votacions o acció de govern","Statements, votes or government action"]},
+ none:["Sin propuesta localizada en las fuentes consultadas.","Sense proposta localitzada a les fonts consultades.","No proposal found in the sources consulted."],
+ th:{cand:["Candidatura","Candidatura","Candidature"],head:["Cabeza de lista por Barcelona","Cap de llista per Barcelona","Head of list in Barcelona"],prog:["Estado","Estat","Status"],doc:["Documento","Document","Document"]},
+ home:{h:["Lo esencial","L'essencial","The essentials"],
+  lede:["España elige Congreso y Senado el domingo 29 de noviembre de 2026. En Barcelona se reparten 32 escaños del Congreso entre 11 candidaturas proclamadas.","Espanya tria Congrés i Senat el diumenge 29 de novembre de 2026. A Barcelona es reparteixen 32 escons del Congrés entre 11 candidatures proclamades.","Spain elects its Congress and Senate on Sunday 29 November 2026. Barcelona fills 32 Congress seats, contested by 11 proclaimed candidatures."],
+  h2:["Las 11 candidaturas y sus programas","Les 11 candidatures i els seus programes","The 11 candidatures and their programmes"],
+  order:["En el orden en que las publica el BOE. Pulsa un nombre para ver su ficha completa.","En l'ordre en què les publica el BOE. Prem un nom per veure'n la fitxa completa.","In the order published in the official gazette (BOE). Select a name to open its full profile."],
+  h3:["Cómo leer esta guía","Com llegir aquesta guia","How to read this guide"],
+  method:["Cada propuesta lleva una etiqueta que indica de dónde sale. Solo las marcadas con P proceden de un programa presentado para estas elecciones; el resto son posiciones documentadas que el partido puede cambiar cuando publique su programa. Todas las candidaturas reciben el mismo tratamiento y los mismos temas. Los resúmenes se apoyan en los documentos de los partidos, en prensa y en el agregador Política Electoral; contrasta siempre con el documento original enlazado.","Cada proposta porta una etiqueta que indica d'on surt. Només les marcades amb P provenen d'un programa presentat per a aquestes eleccions; la resta són posicions documentades que el partit pot canviar quan publiqui el programa. Totes les candidatures reben el mateix tractament i els mateixos temes. Els resums es basen en els documents dels partits, en premsa i en l'agregador Política Electoral; contrasta sempre amb el document original enllaçat.","Every proposal carries a tag showing where it comes from. Only those marked P come from a programme presented for this election; the rest are documented positions that a party may change once it publishes its programme. All candidatures get the same treatment and the same topics. Summaries rely on party documents, press and the aggregator Política Electoral; always check against the linked original."]},
+ cand:{lede:["Elige una candidatura para ver su ficha, sus documentos y sus propuestas en los 15 temas.","Tria una candidatura per veure'n la fitxa, els documents i les propostes en els 15 temes.","Pick a candidature to see its profile, documents and proposals across all 15 topics."],nat:["Candidatura estatal","Candidatura estatal","National lead"]},
+ tema:{lede:["Elige un tema y compara lo que dice cada candidatura.","Tria un tema i compara què diu cada candidatura.","Pick a topic and compare what each candidature says."],filter:["Candidaturas mostradas (pulsa para ocultar o mostrar):","Candidatures mostrades (prem per amagar o mostrar):","Candidatures shown (select to hide or show):"]},
+ agenda:{lede:["Fechas oficiales del proceso electoral y citas de campaña confirmadas.","Dates oficials del procés electoral i cites de campanya confirmades.","Official election dates and confirmed campaign events."],src:["Fuente","Font","Source"],where:["Tu colegio, mesa y horario de votación: consúltalos solo en la fuente oficial.","El teu col·legi, mesa i horari de votació: consulta'ls només a la font oficial.","Your polling place, table and voting hours: check the official source only."]},
+ datos:{lede:["Encuestas y fuentes de datos públicos para contrastar lo que dicen los partidos.","Enquestes i fonts de dades públiques per contrastar què diuen els partits.","Polls and public data sources for checking what the parties say."],
+  cis:["Estimación de voto del CIS (preelectoral, estudio 3584)","Estimació de vot del CIS (preelectoral, estudi 3584)","CIS vote estimate (pre-election study 3584)"],
+  cisnote:["Ámbito estatal. 45.074 entrevistas realizadas del 7 al 30 de octubre de 2026; publicada el 12 de noviembre.","Àmbit estatal. 45.074 entrevistes fetes del 7 al 30 d'octubre de 2026; publicada el 12 de novembre.","Nationwide. 45,074 interviews conducted 7–30 October 2026; published 12 November."],
+  seats:["Horquillas de escaños del mismo estudio: PSOE 134–143, PP 98–106, Vox 57–65 (mayoría absoluta: 176).","Forquilles d'escons del mateix estudi: PSOE 134–143, PP 98–106, Vox 57–65 (majoria absoluta: 176).","Seat ranges from the same study: PSOE 134–143, PP 98–106, Vox 57–65 (absolute majority: 176)."],
+  caveat:["Una encuesta no es un resultado. La prensa señala que esta estimación del CIS se aleja de las demás encuestas publicadas, que dan resultados distintos. Compara varias fuentes.","Una enquesta no és un resultat. La premsa assenyala que aquesta estimació del CIS s'allunya de la resta d'enquestes publicades, que donen resultats diferents. Compara diverses fonts.","A poll is not a result. Press coverage notes this CIS estimate diverges from other published polls, which show different results. Compare several sources."],
+  h2:["Fuentes de datos","Fonts de dades","Data sources"]},
+ vid:{lede:["Vídeo, audio y debates para escuchar a cada candidatura directamente.","Vídeo, àudio i debats per escoltar cada candidatura directament.","Video, audio and debates to hear each candidature directly."],
+  h1:["Enlaces directos comprobados","Enllaços directes comprovats","Verified direct links"],
+  h2:["Búsquedas de vídeo por candidatura","Cerques de vídeo per candidatura","Video searches by candidature"],
+  note:["Estos botones abren una búsqueda en YouTube, no un vídeo concreto: los resultados cambian y pueden incluir contenido de terceros. En cada ficha hay además un botón de búsqueda por tema.","Aquests botons obren una cerca a YouTube, no un vídeo concret: els resultats canvien i poden incloure contingut de tercers. A cada fitxa hi ha també un botó de cerca per tema.","These buttons open a YouTube search, not a specific video: results change and may include third-party content. Each profile also has a per-topic search button."],
+  search:["Buscar vídeos de la candidatura","Cerca vídeos de la candidatura","Search this candidature's videos"],topic:["Buscar vídeos sobre este tema","Cerca vídeos sobre aquest tema","Search videos on this topic"]},
+ src:{lede:["Todo lo que se ha consultado para elaborar la guía, agrupado por tipo.","Tot el que s'ha consultat per elaborar la guia, agrupat per tipus.","Everything consulted to build this guide, grouped by type."],
+  limits:["Límites conocidos a 15 de noviembre de 2026: Junts no ha publicado programa; del programa del PSOE y del «100+15» de Comuns-Front Ampli solo se han podido atribuir las medidas citadas por la prensa; no se han localizado documentos del PCTC. Los temas sin propuesta indican que no se encontró nada en las fuentes, no que el partido no tenga posición.","Límits coneguts a 15 de novembre de 2026: Junts no ha publicat programa; del programa del PSOE i del «100+15» de Comuns-Front Ampli només s'han pogut atribuir les mesures citades per la premsa; no s'han localitzat documents del PCTC. Els temes sense proposta indiquen que no s'ha trobat res a les fonts, no que el partit no tingui posició.","Known limits as of 15 November 2026: Junts has not published one; for PSOE's programme and Comuns-Front Ampli's \"100+15\" only measures quoted in the press could be attributed; no PCTC documents were found. A topic without a proposal means nothing was found in the sources, not that the party has no position."]}
+};
+var TOPICS=[
+ {id:"vivienda",q:"vivienda",n:["Vivienda","Habitatge","Housing"]},
+ {id:"economia",q:"impuestos economía",n:["Economía e impuestos","Economia i impostos","Economy and taxes"]},
+ {id:"trabajo",q:"empleo salarios",n:["Trabajo y salarios","Treball i salaris","Work and wages"]},
+ {id:"sanidad",q:"sanidad",n:["Sanidad","Sanitat","Health"]},
+ {id:"educacion",q:"educación",n:["Educación","Educació","Education"]},
+ {id:"ciencia",q:"ciencia investigación universidad",n:["Ciencia y universidad","Ciència i universitat","Science and universities"]},
+ {id:"energia",q:"energía clima",n:["Energía y clima","Energia i clima","Energy and climate"]},
+ {id:"territorial",q:"Cataluña financiación modelo territorial",n:["Modelo territorial, Cataluña y lengua","Model territorial, Catalunya i llengua","Territorial model, Catalonia and language"]},
+ {id:"infra",q:"Rodalies infraestructuras",n:["Rodalies e infraestructuras","Rodalies i infraestructures","Rodalies rail and infrastructure"]},
+ {id:"inmigracion",q:"inmigración",n:["Inmigración","Immigració","Immigration"]},
+ {id:"seguridad",q:"seguridad",n:["Seguridad","Seguretat","Public safety"]},
+ {id:"justicia",q:"justicia corrupción instituciones",n:["Justicia e instituciones","Justícia i institucions","Justice and institutions"]},
+ {id:"pensiones",q:"pensiones",n:["Pensiones","Pensions","Pensions"]},
+ {id:"igualdad",q:"igualdad familia",n:["Igualdad y familia","Igualtat i família","Equality and family"]},
+ {id:"exterior",q:"política exterior defensa",n:["Política exterior y defensa","Política exterior i defensa","Foreign policy and defence"]}
+];
+var FACTS=[
+ {v:["29 nov 2026","29 nov 2026","29 Nov 2026"],l:["Jornada de votación","Jornada de votació","Election day"]},
+ {v:["32","32","32"],l:["Escaños del Congreso por Barcelona","Escons del Congrés per Barcelona","Congress seats for Barcelona"]},
+ {v:["11","11","11"],l:["Candidaturas al Congreso proclamadas","Candidatures al Congrés proclamades","Proclaimed Congress candidatures"]},
+ {v:["13–27 nov","13–27 nov","13–27 Nov"],l:["Campaña electoral","Campanya electoral","Campaign period"]},
+ {sen:1,v:["19 nov","19 nov","19 Nov"],l:["Último día para pedir el voto por correo","Darrer dia per demanar el vot per correu","Last day to request a postal vote"]}
+];
+var NOTES=[
+ ["Podemos no tiene papeleta propia en Barcelona: pactó con ERC, que incluye en su lista a personas propuestas por Podemos. La CUP y Aliança Catalana decidieron no presentarse. PACMA y Por un Mundo más Justo presentaron lista por Barcelona pero no fueron proclamadas. Iustitia Europa solo se presenta por Madrid.","Podem no té papereta pròpia a Barcelona: va pactar amb ERC, que inclou a la llista persones proposades per Podem. La CUP i Aliança Catalana van decidir no presentar-se. PACMA i Por un Mundo más Justo van presentar llista per Barcelona però no van ser proclamades. Iustitia Europa només es presenta per Madrid.","Podemos has no ballot of its own in Barcelona: it struck a deal with ERC, whose list includes people proposed by Podemos. CUP and Aliança Catalana chose not to run. PACMA and Por un Mundo más Justo filed Barcelona lists but were not proclaimed. Iustitia Europa is running only in Madrid."],
+ ["El voto al Congreso es a una lista cerrada (papeleta blanca). El Senado se vota aparte, en lista abierta (papeleta sepia). Esta guía cubre el Congreso.","El vot al Congrés és a una llista tancada (papereta blanca). El Senat es vota a part, en llista oberta (papereta sèpia). Aquesta guia cobreix el Congrés.","The Congress vote is for a closed list (white ballot). The Senate is voted separately on an open list (sepia ballot). This guide covers Congress."],
+ ["Senado: el PSOE y el Frente Amplio pactaron una papeleta conjunta («Senado de Progreso») en 47 circunscripciones, pero en Barcelona no se aplica: el PSC y Comuns-Front Ampli presentan candidaturas separadas al Senado. En Girona, Lleida y Tarragona los Comuns no se presentan al Senado por su acuerdo con el PSC. Para el Congreso van por separado en toda España.","Senat: el PSOE i el Front Ampli van pactar una papereta conjunta («Senado de Progreso») en 47 circumscripcions, però a Barcelona no s'aplica: el PSC i Comuns-Front Ampli presenten candidatures separades al Senat. A Girona, Lleida i Tarragona els Comuns no es presenten al Senat pel seu acord amb el PSC. Per al Congrés van per separat a tot Espanya.","Senate: PSOE and Frente Amplio agreed a joint ballot (\"Senado de Progreso\") in 47 constituencies, but it does not apply in Barcelona: PSC and Comuns-Front Ampli field separate Senate candidatures. In Girona, Lleida and Tarragona, Comuns are not running for the Senate under their deal with PSC. For Congress they run separately across Spain."]
+];
+var AGENDA=[
+ {d:"2026-10-06",w:["6 oct","6 oct","6 Oct"],x:["Publicación del decreto de disolución y convocatoria (Real Decreto 806/2026).","Publicació del decret de dissolució i convocatòria (Reial decret 806/2026).","Dissolution and election decree published (Royal Decree 806/2026)."],s:"BOE",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"},
+ {d:"2026-11-02",w:["2 nov","2 nov","2 Nov"],x:["Proclamación de candidaturas.","Proclamació de candidatures.","Candidatures proclaimed."],s:"Junta Electoral Central",u:"https://www.juntaelectoralcentral.es/cs/jec/documentos/eg2026_calendario.pdf"},
+ {d:"2026-11-13",w:["13 nov","13 nov","13 Nov"],x:["Empieza la campaña electoral (0:00 h).","Comença la campanya electoral (0:00 h).","Campaign begins (00:00)."],s:"BOE",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"},
+ {d:"2026-11-15",w:["15 nov","15 nov","15 Nov"],x:["El PSOE presentó su programa electoral en un acto en Alcorcón.","El PSOE va presentar el programa electoral en un acte a Alcorcón.","PSOE presented its programme at an event in Alcorcón."],s:"Infobae",u:"https://www.infobae.com/espana/agencias/2026/11/15/sanchez-anuncia-mas-impuestos-a-fondos-propietarios-de-vivienda-y-permisos-para-cuidar-hijos-de-menos-de-8-anos/"},
+ {d:"2026-11-19",w:["19 nov","19 nov","19 Nov"],x:["Último día para solicitar el voto por correo (residentes en España).","Darrer dia per sol·licitar el vot per correu (residents a Espanya).","Last day to request a postal vote (residents in Spain)."],s:"INE",u:"https://www.ine.es/dyngs/CEL/index.htm?cid=1702"},
+ {d:"2026-11-19",w:["19 nov","19 nov","19 Nov"],x:["Cara a cara Sánchez–Feijóo, organizado por la Academia de Televisión.","Cara a cara Sánchez–Feijóo, organitzat per l'Acadèmia de Televisió.","Sánchez–Feijóo head-to-head debate, organised by the Television Academy."],s:"elDiario.es",u:"https://www.eldiario.es/vertele/noticias/debate-cara-a-cara-sanchez-feijoo-sera-jueves-19-noviembre-academia-tv_1_13662406.html"},
+ {d:"2026-11-23",w:["23 nov · 22:00","23 nov · 22:00","23 Nov · 22:00"],x:["Debate a ocho en RTVE con portavoces de PP, PSOE, Vox, Frente Amplio, ERC, Junts, EH Bildu y PNV.","Debat a vuit a RTVE amb portaveus de PP, PSOE, Vox, Front Ampli, ERC, Junts, EH Bildu i PNB.","Eight-party RTVE debate with spokespeople from PP, PSOE, Vox, Frente Amplio, ERC, Junts, EH Bildu and PNV."],s:"Mundiario",u:"https://www.mundiario.com/politica/sanchez-feijoo-tienen-fecha-cara-cara-vivienda-corrupcion-economia-marcaran-29-n/20261114050328452793.html"},
+ {d:"2026-11-25",w:["25 nov","25 nov","25 Nov"],x:["Último día para depositar el voto por correo en Correos.","Darrer dia per dipositar el vot per correu a Correus.","Last day to hand in a postal vote at the post office."],s:"La Moncloa",u:"https://www.lamoncloa.gob.es/serviciosdeprensa/notasprensa/interior/paginas/voto-por-correo-elecciones-generales-29n.aspx"},
+ {d:"2026-11-27",w:["27 nov","27 nov","27 Nov"],x:["Fin de la campaña (24:00 h).","Fi de la campanya (24:00 h).","Campaign ends (24:00)."],s:"BOE",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"},
+ {d:"2026-11-29",w:["29 nov","29 nov","29 Nov"],x:["Jornada de votación.","Jornada de votació.","Election day."],s:"BOE",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"},
+ {d:"2026-12-23",w:["23 dic","23 des","23 Dec"],x:["Sesión constitutiva del Congreso y del Senado.","Sessió constitutiva del Congrés i del Senat.","Opening session of the new Congress and Senate."],s:"BOE",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"}
+];
+var CIS=[["PSOE",33.3],["PP",25.5],["Vox",18.4],["Frente Amplio",4.7]];
+var DATA=[
+ {n:["CIS: encuesta preelectoral","CIS: enquesta preelectoral","CIS: pre-election survey"],x:["Nota y avance de resultados del estudio 3584.","Nota i avanç de resultats de l'estudi 3584.","Press note and preview of study 3584."],s:"cis.es",u:"https://www.cis.es/es/w/el-psoe-lograr%C3%ADa-el-33-3-de-los-votos-en-las-elecciones-generales-del-29n"},
+ {n:["INE: censo y plazos","INE: cens i terminis","INE: electoral roll and deadlines"],x:["Plazos para electores y funciones de la Oficina del Censo Electoral.","Terminis per a electors i funcions de l'Oficina del Cens Electoral.","Voter deadlines and the Electoral Census Office's functions."],s:"ine.es",u:"https://www.ine.es/dyngs/CEL/index.htm?cid=1702"},
+ {n:["Junta Electoral Central: calendario","Junta Electoral Central: calendari","Central Electoral Board: calendar"],x:["Calendario electoral completo en PDF.","Calendari electoral complet en PDF.","Full election calendar (PDF)."],s:"juntaelectoralcentral.es",u:"https://www.juntaelectoralcentral.es/cs/jec/documentos/eg2026_calendario.pdf"},
+ {n:["BOE: decreto de convocatoria","BOE: decret de convocatòria","BOE: election decree"],x:["Real Decreto 806/2026, de 5 de octubre.","Reial decret 806/2026, de 5 d'octubre.","Royal Decree 806/2026 of 5 October."],s:"boe.es",u:"https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"},
+ {n:["La Moncloa: voto por correo","La Moncloa: vot per correu","La Moncloa: postal voting"],x:["Cómo y hasta cuándo pedir y enviar el voto por correo.","Com i fins quan demanar i enviar el vot per correu.","How and until when to request and send a postal vote."],s:"lamoncloa.gob.es",u:"https://www.lamoncloa.gob.es/serviciosdeprensa/notasprensa/interior/paginas/voto-por-correo-elecciones-generales-29n.aspx"},
+ {n:["3Cat: listas catalanas","3Cat: llistes catalanes","3Cat: Catalan lists"],x:["Candidatos al Congreso y al Senado por las cuatro demarcaciones.","Candidats al Congrés i al Senat per les quatre demarcacions.","Congress and Senate candidates in the four Catalan constituencies."],s:"3cat.cat",u:"https://www.3cat.cat/3catinfo/qui-son-els-candidats-catalans-a-les-eleccions-generals-del-29n-consulta-les-llistes-al-congres-i-al-senat/noticia/3436292/"}
+];
+var MEDIA=[
+ {n:["Declaración de Pedro Sánchez anunciando la convocatoria (5 oct, con vídeo)","Declaració de Pedro Sánchez anunciant la convocatòria (5 oct, amb vídeo)","Pedro Sánchez's statement calling the election (5 Oct, with video)"],s:"La Moncloa",u:"https://www.lamoncloa.gob.es/presidente/actividades/Paginas/2026/051026-sanchez-convocatoria-elecciones.aspx"},
+ {n:["Rufián será el candidato de ERC al Congreso (vídeo)","Rufián serà el candidat d'ERC al Congrés (vídeo)","Rufián to be ERC's Congress candidate (video)"],s:"YouTube",u:"https://www.youtube.com/watch?v=e1g2LU9Z7YE"},
+ {n:["Rufián encabezará la lista de ERC (vídeo)","Rufián encapçalarà la llista d'ERC (vídeo)","Rufián to head the ERC list (video)"],s:"YouTube",u:"https://www.youtube.com/watch?v=XSbhYeMF7ks"},
+ {n:["Catalunya nit, 9 nov: crónica del debate de candidatos de PIMEC (audio)","Catalunya nit, 9 nov: crònica del debat de candidats de PIMEC (àudio)","Catalunya nit, 9 Nov: report on the PIMEC candidates' debate (audio)"],s:"3Cat",u:"https://www.3cat.cat/3cat/catalunya-nit-de-21-a-22-h-09112026/audio/1297057/"},
+ {n:["Debate de PIMEC: vivienda y Rodalies (crónica)","Debat de PIMEC: habitatge i Rodalies (crònica)","PIMEC debate: housing and Rodalies (report)"],s:"3CatInfo",u:"https://www.3cat.cat/3catinfo/lhabitatge-i-rodalies-centren-el-debat-de-candidats-del-29n-de-la-pimec-amb-labsencia-de-rufian/noticia/3438734/"},
+ {n:["Arranque de campaña en Cataluña, partido a partido","Arrencada de campanya a Catalunya, partit a partit","Campaign launch in Catalonia, party by party"],s:"3CatInfo",u:"https://www.3cat.cat/3catinfo/la-campanya-electoral-arrenca-marcada-per-lultima-enquesta-del-cis-abans-del-29n/noticia/3439494/"},
+ {n:["Entrevista a Míriam Nogueras en El matí de Catalunya Ràdio","Entrevista a Míriam Nogueras a El matí de Catalunya Ràdio","Interview with Míriam Nogueras on El matí de Catalunya Ràdio"],s:"3CatInfo",u:"https://www.3cat.cat/3catinfo/miriam-nogueras-de-junts-amb-nosaltres-no-hi-haura-un-ministre-que-es-digui-abascal-ni-colau/noticia/3437763/"},
+ {n:["Entrevista a Jordi Graupera, candidato de Alhora","Entrevista a Jordi Graupera, candidat d'Alhora","Interview with Jordi Graupera, Alhora candidate"],s:"Nació",u:"https://naciodigital.cat/politica/jordi-graupera-alhora-anar-congres-trencar-acords-pacificacio-junts-erc.html"}
+];
+var VQ=[
+ [["Presentación del programa","Presentació del programa","Programme launch"],"programa electoral 29N presentación"],
+ [["Mítines","Mítings","Rallies"],"mitin campaña 29N"],
+ [["Entrevistas","Entrevistes","Interviews"],"entrevista 29N"],
+ [["Debates","Debats","Debates"],"debate electoral 29N"]
+];
+var SOURCES=[
+ {n:["Fuentes oficiales","Fonts oficials","Official sources"],i:[
+  ["BOE · Real Decreto 806/2026 de convocatoria","https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"],
+  ["Junta Electoral Central · Calendario electoral","https://www.juntaelectoralcentral.es/cs/jec/documentos/eg2026_calendario.pdf"],
+  ["INE · Plazos de interés para los electores","https://www.ine.es/dyngs/CEL/index.htm?cid=1702"],
+  ["La Moncloa · Voto por correo","https://www.lamoncloa.gob.es/serviciosdeprensa/notasprensa/interior/paginas/voto-por-correo-elecciones-generales-29n.aspx"],
+  ["CIS · Preelectoral elecciones generales 2026","https://www.cis.es/es/w/el-psoe-lograr%C3%ADa-el-33-3-de-los-votos-en-las-elecciones-generales-del-29n"]]},
+ {n:["Documentos y webs de los partidos","Documents i webs dels partits","Party documents and websites"],i:[
+  ["PP · La Reconstrucción Nacional (PDF)","https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf"],
+  ["ERC · Programa 2023 (PDF, referencia anterior)","https://static.esquerra.cat/uploads/20230905/e2023-programa.pdf"],
+  ["Alhora · web y nota de candidatura","https://alhora.cat/"],
+  ["Frente Obrero · presentación de la candidatura","https://frenteobrero.es/frente-obrero-candidatura-elecciones-generales-29n-defendamos-espana/"]]},
+ {n:["Candidaturas en Barcelona","Candidatures a Barcelona","Candidatures in Barcelona"],i:[
+  ["Infobae/agencias · El BOE publica las 895 candidaturas","https://www.infobae.com/espana/agencias/2026/11/03/el-boe-publica-las-895-candidaturas-para-el-29n-534-al-congreso-y-361-al-senado/"],
+  ["3CatInfo · Candidats catalans al 29N","https://www.3cat.cat/3catinfo/qui-son-els-candidats-catalans-a-les-eleccions-generals-del-29n-consulta-les-llistes-al-congres-i-al-senat/noticia/3436292/"],
+  ["3CatInfo · Acord ERC–Podem","https://www.3cat.cat/3catinfo/gabriel-rufian-sera-el-cap-de-llista-desquerra-a-les-eleccions-generals-del-29n/noticia/3433559/"],
+  ["ElNacional.cat · La CUP opta por no presentarse","https://www.elnacional.cat/es/politica/cup-opta-por-no-presentarse-elecciones-generales-pero-sometera-decision-entre-militancia_1708198_102.html"],
+  ["El Triangle · Aliança Catalana no se presenta","https://www.eltriangle.eu/es/2026/10/05/silvia-orriols-decide-que-alianca-catalana-no-presente-listas-el-29n/"],
+  ["Nació · Llistes d'Alhora","https://naciodigital.cat/politica/llistes-dalhora-a-les-eleccions-espanyoles-del-29-n-qui-acompanya-jordi-graupera.html"],
+  ["Infobae · PSOE y Frente Amplio, juntos al Senado","https://www.infobae.com/espana/2026/10/17/acuerdo-historico-para-las-elecciones-del-29-n-en-el-senado-psoe-y-frente-amplio-se-presentaran-juntos-para-tratar-de-impedir-otra-mayoria-absoluta-del-pp/"],
+  ["ElNacional.cat · Candidats al Senat a Catalunya","https://www.elnacional.cat/ca/eleccions/generals-2026/candidats-senat-catalunya-eleccions-generals-2026-tota-llista_1725014_102.html"],
+  ["Mundiario · Coalición Democracia 21–Ciudadanos","https://www.mundiario.com/articulo/politica/miriam-gonzalez-une-democracia-21-ciudadanos-ucin-elecciones-29-n/20261014231121446829.html"]]},
+ {n:["Programas y propuestas","Programes i propostes","Programmes and proposals"],i:[
+  ["Política Electoral · PP","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/pp"],
+  ["Política Electoral · PSOE","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/psoe"],
+  ["Política Electoral · Vox","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/vox"],
+  ["Política Electoral · Sumar / Frente Amplio","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/sumar"],
+  ["Política Electoral · ERC","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/erc"],
+  ["Política Electoral · Junts","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/junts"],
+  ["Política Electoral · Podemos","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/podemos"],
+  ["Política Electoral · Se Acabó La Fiesta","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/se-acabo-la-fiesta"],
+  ["Política Electoral · Democracia 21","https://www.politicaelectoral.com/es/espana/generales-2026/nacional/democracia-21"],
+  ["eleccionesEspaña.com · Programa del PP","https://xn--eleccionesespaa-crb.com/programas/pp"],
+  ["El Correo Gallego · Programa del PP","https://www.elcorreogallego.es/espana/2026/11/10/programa-electoral-pp-29-n-136288569.html"],
+  ["El Correo Gallego · Frente Amplio «100+15»","https://www.elcorreogallego.es/galicia/2026/11/13/frente-amplio-propone-ap-9-136383440.html"],
+  ["Telecinco · Propuestas de PP, PSOE, Vox, Frente Amplio y Podemos","https://www.telecinco.es/noticias/espana/20261113/elecciones-generales-2026-programas-electorales-pp-psoe-vox-sumar-podemos_18_020555572.html"],
+  ["Artículo 14 · Cuándo publican sus programas","https://www.articulo14.es/politica/elecciones-generales-del-29n-cuando-publicaran-psoe-pp-vox-frente-amplio-y-demas-partidos-sus-programas-electorales-20261110.html"],
+  ["Infobae/agencias · Sánchez presenta el programa del PSOE (15 nov)","https://www.infobae.com/espana/agencias/2026/11/15/sanchez-anuncia-mas-impuestos-a-fondos-propietarios-de-vivienda-y-permisos-para-cuidar-hijos-de-menos-de-8-anos/"],
+  ["El Plural · Los cinco compromisos del PSOE","https://www.elplural.com/politica/espana/sanchez-despliega-programa-29n-nuevos-derechos-sociales-ofensiva-fiscal-vivienda_804242102"],
+  ["Demócrata · Sánchez avanza el programa del PSOE","https://democrata.es/elecciones-generales-espana/sanchez-avanza-programa-electoral-psoe-promete-crear-figura-unidad-amistad-con-efectos-administrativos-similares-matrimonio"],
+  ["Moncloa.com · Iustitia Europa se presenta por Madrid","https://www.moncloa.com/2026/10/27/iustitia-europa-avales-29n-3456311"],
+  ["Público · El PSOE presentará el programa el domingo","https://www.publico.es/politica/partidos/psoe-cerrara-campana-sanchez-madrid-estrena-nuevo-lema-29n-vota-fuerza.html"],
+  ["Qué Proponen · Frente Obrero","https://queproponen.es/"],
+  ["Antes de Votar · Frente Obrero","https://antesdevotar.org/partido/frenteobrero/"],
+  ["Moncloa.com · Lema de Junts","https://www.moncloa.com/2026/11/09/junts-campana-29n-catalunya-al-centre-3464822/"]]},
+ {n:["Campaña, debates y encuestas","Campanya, debats i enquestes","Campaign, debates and polls"],i:[
+  ["3CatInfo · Arrencada de campanya","https://www.3cat.cat/3catinfo/la-campanya-electoral-arrenca-marcada-per-lultima-enquesta-del-cis-abans-del-29n/noticia/3439494/"],
+  ["3CatInfo · Debat de PIMEC","https://www.3cat.cat/3catinfo/lhabitatge-i-rodalies-centren-el-debat-de-candidats-del-29n-de-la-pimec-amb-labsencia-de-rufian/noticia/3438734/"],
+  ["elDiario.es · Fecha del cara a cara","https://www.eldiario.es/vertele/noticias/debate-cara-a-cara-sanchez-feijoo-sera-jueves-19-noviembre-academia-tv_1_13662406.html"],
+  ["La Voz del Sur · Debate de RTVE","https://www.lavozdelsur.es/vida/pantallazos/rtve-pone-fecha-al-debate-del-29n-y-junts-se-incorpora-tras-rechazar-la-invitacion-estos-son-los-ochos-portavoces.html"],
+  ["elDiario.es · El CIS se aleja del resto de encuestas","https://www.eldiario.es/politica/cis-preelectoral-aleja-resto-encuestas-situa-suma-pp-vox-lejos-mayoria-absoluta_1_13658236.html"]]}
+];
+
+var WEB=["Web oficial","Web oficial","Official website"],AGG=["Ficha en Política Electoral","Fitxa a Política Electoral","Profile on Política Electoral"];
+var PARTIES=[
+{id:"psc",short:"PSC-PSOE",name:"Partit dels Socialistes de Catalunya (PSC-PSOE)",color:"#d6202a",head:"Jordi Hereu",nat:"Pedro Sánchez",status:"pub",q:"PSOE PSC",
+ doc:["Programa presentado por Pedro Sánchez el 15 de noviembre en Alcorcón. No se ha localizado el texto íntegro: solo se marcan con P las medidas que la prensa atribuye al programa; el resto son resoluciones del congreso de 2024, el programa de 2023, acción de gobierno y compromisos de campaña.","Programa presentat per Pedro Sánchez el 15 de novembre a Alcorcón. No s'ha localitzat el text íntegre: només es marquen amb P les mesures que la premsa atribueix al programa; la resta són resolucions del congrés del 2024, el programa del 2023, acció de govern i compromisos de campanya.","Programme presented by Pedro Sánchez on 15 November in Alcorcón. The full text was not found: only measures the press attributes to the programme are tagged P; the rest come from 2024 congress resolutions, the 2023 programme, government action and campaign pledges."],
+ about:["Partido de gobierno. En Cataluña se presenta como PSC. Lemas de campaña del PSOE: «La fuerza de la gente» y «Vota con fuerza».","Partit de govern. A Catalunya es presenta com a PSC. Lemes de campanya del PSOE: «La fuerza de la gente» i «Vota con fuerza».","Governing party. In Catalonia it runs as PSC. PSOE campaign slogans: \"La fuerza de la gente\" and \"Vota con fuerza\"."],
+ links:[[WEB,"https://www.socialistes.cat/"],[["Web del PSOE","Web del PSOE","PSOE website"],"https://www.psoe.es/"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/psoe"]],
+ props:{
+ vivienda:[["P","Subir los impuestos a los fondos de inversión y grandes propietarios con viviendas vacías, de alquiler turístico o a precios inasequibles, sin tipos concretados.","Apujar els impostos als fons d'inversió i grans propietaris amb habitatges buits, de lloguer turístic o a preus inassequibles, sense tipus concretats.","Raise taxes on investment funds and large owners holding empty homes, tourist lets or unaffordably priced rentals, with no rates specified."],
+  ["P","Elevar progresivamente la inversión en vivienda social hasta el 1 % del PIB.","Elevar progressivament la inversió en habitatge social fins a l'1 % del PIB.","Gradually raise social-housing investment to 1% of GDP."],
+  ["D","Decretos de vivienda reaprobados el 6 de octubre: subida del alquiler limitada al 2 % en contratos vigentes hasta finales de 2027 y desahucios de familias vulnerables suspendidos hasta 2030.","Decrets d'habitatge reaprovats el 6 d'octubre: pujada del lloguer limitada al 2 % en contractes vigents fins a finals del 2027 i desnonaments de famílies vulnerables suspesos fins al 2030.","Housing decrees re-approved on 6 October: rent rises capped at 2% on existing contracts until end-2027 and evictions of vulnerable families suspended until 2030."],
+  ["D","Préstamos ICO sin intereses de hasta el 20 % del precio (máximo 50.000 €) para la primera vivienda.","Préstecs ICO sense interessos de fins al 20 % del preu (màxim 50.000 €) per al primer habitatge.","Interest-free ICO loans of up to 20% of the price (max €50,000) for a first home."],
+  ["D","Gran empresa pública de vivienda y parque público por encima del 6 % del total; Plan Estatal 2026-2030 con 7.000 millones.","Gran empresa pública d'habitatge i parc públic per sobre del 6 % del total; Pla Estatal 2026-2030 amb 7.000 milions.","A large public housing company and public stock above 6% of the total; 2026-2030 State Plan worth €7bn."],
+  ["D","Hereu apoyó en el debate de PIMEC un pacto de Estado de vivienda que implique a todas las instituciones.","Hereu va donar suport al debat de PIMEC a un pacte d'Estat d'habitatge que impliqui totes les institucions.","At the PIMEC debate Hereu backed a state-wide housing pact binding all institutions."]],
+ economia:[["A","Tipo del 50 % en el IRPF para rentas superiores a 300.000 € (ponencia del congreso de 2024).","Tipus del 50 % a l'IRPF per a rendes superiors a 300.000 € (ponència del congrés del 2024).","A 50% income-tax rate on incomes above €300,000 (2024 congress paper)."],
+  ["D","Sistema fiscal progresivo y lucha contra el fraude; mantiene el impuesto a la banca y el mínimo del 15 % a multinacionales, ya aprobados.","Sistema fiscal progressiu i lluita contra el frau; manté l'impost a la banca i el mínim del 15 % a multinacionals, ja aprovats.","Progressive taxation and anti-fraud action; keeps the bank levy and the 15% minimum tax on multinationals already in force."]],
+ trabajo:[["A","Jornada media de 36 horas semanales en 2030 y salario mínimo garantizado en el 60 % del salario medio.","Jornada mitjana de 36 hores setmanals el 2030 i salari mínim garantit en el 60 % del salari mitjà.","An average 36-hour week by 2030 and a minimum wage guaranteed at 60% of the average wage."],
+  ["D","Aprobar un Estatuto del Becario.","Aprovar un Estatut del Becari.","Pass an Interns' Statute."],
+  ["P","Más ayudas y protección social para los autónomos, sin cifras concretadas.","Més ajuts i protecció social per als autònoms, sense xifres concretades.","More aid and social protection for the self-employed, with no figures specified."]],
+ sanidad:[["A","Esperas máximas de 120 días para operarse, 60 para el especialista y 30 para pruebas (programa de 2023).","Esperes màximes de 120 dies per operar-se, 60 per a l'especialista i 30 per a proves (programa del 2023).","Maximum waits of 120 days for surgery, 60 for a specialist and 30 for tests (2023 programme)."],
+  ["D","Recuperar la ley de gestión pública del Sistema Nacional de Salud, que limita los conciertos y decayó con la disolución.","Recuperar la llei de gestió pública del Sistema Nacional de Salut, que limita els concerts i va decaure amb la dissolució.","Revive the public-management health bill, which limits outsourcing and lapsed when parliament was dissolved."]],
+ educacion:[["D","Máximo de 22 alumnos por aula en Primaria y 25 en ESO (proyecto decaído).","Màxim de 22 alumnes per aula a Primària i 25 a l'ESO (projecte decaigut).","Class-size caps of 22 in primary and 25 in lower secondary (lapsed bill)."],
+  ["A","Matrícula universitaria y de FP gratuita para quien aprueba a la primera; plazas públicas gratuitas de 0 a 3 años de forma gradual (2023).","Matrícula universitària i d'FP gratuïta per a qui aprova a la primera; places públiques gratuïtes de 0 a 3 anys de manera gradual (2023).","Free university and vocational tuition for credits passed first time; free public 0–3 places phased in (2023)."]],
+ energia:[["D","81 % de electricidad renovable en 2030 según el plan de energía y clima, con cierre ordenado de las nucleares; Almaraz autorizada hasta junio de 2030.","81 % d'electricitat renovable el 2030 segons el pla d'energia i clima, amb tancament ordenat de les nuclears; Almaraz autoritzada fins al juny del 2030.","81% renewable electricity by 2030 under the energy and climate plan, with an orderly nuclear phase-out; Almaraz licensed until June 2030."],
+  ["D","Pacto de Estado frente a la emergencia climática.","Pacte d'Estat davant l'emergència climàtica.","A cross-party pact on the climate emergency."]],
+ territorial:[["D","Nuevo modelo de financiación autonómica: 20.975 millones más en 2027 y cesión del 55 % del IRPF y el 56,5 % del IVA; requiere mayoría absoluta en la próxima legislatura.","Nou model de finançament autonòmic: 20.975 milions més el 2027 i cessió del 55 % de l'IRPF i el 56,5 % de l'IVA; requereix majoria absoluta a la pròxima legislatura.","New regional financing model: €20.975bn more in 2027 and transfer of 55% of income tax and 56.5% of VAT; needs an absolute majority next term."],
+  ["D","Condonación de 83.252 millones de deuda autonómica (proyecto decaído) y defensa de la amnistía.","Condonació de 83.252 milions de deute autonòmic (projecte decaigut) i defensa de l'amnistia.","Write-off of €83.252bn of regional debt (lapsed bill) and defence of the amnesty."],
+  ["D","El PSC abrió campaña presentándose como garante del autogobierno y de la lengua catalana.","El PSC va obrir campanya presentant-se com a garant de l'autogovern i de la llengua catalana.","PSC opened its campaign presenting itself as guarantor of self-government and the Catalan language."]],
+ infra:[["D","Abono único estatal de transporte de 60 € al mes (30 € para menores de 26), en vigor desde enero de 2026.","Abonament únic estatal de transport de 60 € al mes (30 € per a menors de 26), en vigor des del gener del 2026.","Single national transport pass at €60 a month (€30 for under-26s), in force since January 2026."],
+  ["D","En el debate de PIMEC todos los candidatos, también Hereu, pidieron más inversión en Rodalies y el corredor mediterráneo.","Al debat de PIMEC tots els candidats, també Hereu, van demanar més inversió a Rodalies i el corredor mediterrani.","At the PIMEC debate all candidates, Hereu included, called for more investment in Rodalies and the Mediterranean corridor."]],
+ inmigracion:[["D","Regularización extraordinaria de 2026 (1.174.978 solicitudes) y reglamento que reduce el arraigo a dos años.","Regularització extraordinària del 2026 (1.174.978 sol·licituds) i reglament que redueix l'arrelament a dos anys.","The 2026 extraordinary regularisation (1,174,978 applications) and rules cutting the residence requirement to two years."],
+  ["A","Nueva ley de nacionalidad y más convenios de migración circular (2023).","Nova llei de nacionalitat i més convenis de migració circular (2023).","A new nationality law and more circular-migration agreements (2023)."]],
+ seguridad:[["D","Continuidad: ley de multirreincidencia en vigor desde abril de 2026 y plan contra el narcotráfico en el Campo de Gibraltar.","Continuïtat: llei de multireincidència en vigor des de l'abril del 2026 i pla contra el narcotràfic al Campo de Gibraltar.","Continuity: repeat-offender law in force since April 2026 and the anti-drug-trafficking plan for Campo de Gibraltar."]],
+ justicia:[["D","Recuperar la nueva Ley de Enjuiciamiento Criminal, que da la instrucción a los fiscales, y la ley de integridad pública con una agencia anticorrupción.","Recuperar la nova Llei d'enjudiciament criminal, que dona la instrucció als fiscals, i la llei d'integritat pública amb una agència anticorrupció.","Revive the new criminal-procedure law handing investigations to prosecutors, and the public-integrity law creating an anti-corruption agency."]],
+ pensiones:[["P","Blindar en la Constitución la revalorización anual de las pensiones con el IPC.","Blindar a la Constitució la revaloració anual de les pensions amb l'IPC.","Write annual inflation-linked pension rises into the Constitution."],
+  ["D","Sánchez promete cuatro años más de revalorización con el IPC y acabar la legislatura con 20.000 millones en el Fondo de Reserva.","Sánchez promet quatre anys més de revaloració amb l'IPC i acabar la legislatura amb 20.000 milions al Fons de Reserva.","Sánchez pledges four more years of inflation-linked rises and €20bn in the Reserve Fund by the end of the term."]],
+ igualdad:[["P","Nueva prestación de cuatro semanas, retribuida al 100 % de la base reguladora, para cuidar a hijos menores de ocho años.","Nova prestació de quatre setmanes, retribuïda al 100 % de la base reguladora, per tenir cura de fills menors de vuit anys.","A new four-week benefit, paid at 100% of the contribution base, to care for children under eight."],
+  ["P","Crear la «unión de amistad»: reconocimiento legal de relaciones de cuidados entre personas sin vínculo familiar ni de pareja.","Crear la «unió d'amistat»: reconeixement legal de relacions de cures entre persones sense vincle familiar ni de parella.","Create a \"friendship union\": legal recognition of caring relationships between people who are neither family nor a couple."],
+  ["P","Blindar en la Constitución el derecho al aborto.","Blindar a la Constitució el dret a l'avortament.","Write the right to abortion into the Constitution."],
+  ["D","Aprobar la ley de violencia vicaria.","Aprovar la llei de violència vicària.","Pass the vicarious-violence law."],
+  ["A","Abolir la prostitución castigando el proxenetismo y ley integral contra la trata (2023).","Abolir la prostitució castigant el proxenetisme i llei integral contra el tràfic de persones (2023).","Abolish prostitution by punishing pimping, plus a comprehensive anti-trafficking law (2023)."]],
+ exterior:[["D","Gasto en defensa en torno al 2 % del PIB sin asumir el 5 % de la OTAN; embargo de armas a Israel y petición de suspender el acuerdo UE-Israel.","Despesa en defensa al voltant del 2 % del PIB sense assumir el 5 % de l'OTAN; embargament d'armes a Israel i petició de suspendre l'acord UE-Israel.","Defence spending around 2% of GDP without accepting NATO's 5%; arms embargo on Israel and a call to suspend the EU–Israel agreement."],
+  ["A","Apoyo a Ucrania y a su ingreso en la UE; 0,7 % de ayuda al desarrollo en 2030 (2023).","Suport a Ucraïna i al seu ingrés a la UE; 0,7 % d'ajuda al desenvolupament el 2030 (2023).","Support for Ukraine and its EU accession; 0.7% development aid by 2030 (2023)."]]
+ }},
+{id:"junts",short:"Junts",name:"Junts per Catalunya (JxCat)",color:"#18b5ad",head:"Míriam Nogueras",nat:"",status:"none",q:"Junts Nogueras",
+ doc:["Sin programa publicado para el 29N. Las posiciones proceden de iniciativas y votaciones de 2025-2026, declaraciones de la candidata y el programa de 2023.","Sense programa publicat per al 29N. Les posicions provenen d'iniciatives i votacions del 2025-2026, declaracions de la candidata i el programa del 2023.","No programme published for 29N. Positions come from 2025-2026 bills and votes, the candidate's statements and the 2023 programme."],
+ about:["Partido independentista catalán. Lema: «Catalunya al centre». Nogueras descarta investir un gobierno de PP y Vox y uno del PSOE con Ada Colau de ministra, y se abre a investir a un socialista que no sea Sánchez a cambio, entre otras cosas, del concierto económico.","Partit independentista català. Lema: «Catalunya al centre». Nogueras descarta investir un govern de PP i Vox i un del PSOE amb Ada Colau de ministra, i s'obre a investir un socialista que no sigui Sánchez a canvi, entre altres coses, del concert econòmic.","Catalan pro-independence party. Slogan: \"Catalunya al centre\". Nogueras rules out backing a PP–Vox government or a PSOE one with Ada Colau as minister, and is open to backing a Socialist other than Sánchez in exchange for, among other things, a Basque-style fiscal agreement."],
+ links:[[WEB,"https://junts.cat/"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/junts"]],
+ props:{
+ vivienda:[["D","Votó contra los decretos de vivienda del Gobierno y registró uno alternativo: prórrogas voluntarias de hasta dos años, deducción del 15 % del alquiler en el IRPF e IVA del 5 % en obra nueva para residencia habitual.","Va votar contra els decrets d'habitatge del Govern i en va registrar un d'alternatiu: pròrrogues voluntàries de fins a dos anys, deducció del 15 % del lloguer a l'IRPF i IVA del 5 % en obra nova per a residència habitual.","Voted against the government's housing decrees and tabled an alternative: voluntary lease extensions of up to two years, a 15% income-tax deduction for rent and 5% VAT on new-build main homes."],
+  ["D","Desalojo cautelar en 48 horas de ocupantes sin título.","Desallotjament cautelar en 48 hores d'ocupants sense títol.","Precautionary eviction within 48 hours of occupants without legal title."]],
+ economia:[["D","Deflactar el IRPF, suprimir Sucesiones en línea directa y eximir de IVA a autónomos que facturen menos de 85.000 €.","Deflactar l'IRPF, suprimir Successions en línia directa i eximir d'IVA els autònoms que facturin menys de 85.000 €.","Index income tax to inflation, scrap inheritance tax in direct line and exempt self-employed people billing under €85,000 from VAT."],
+  ["D","Que la Generalitat recaude todos los impuestos de Cataluña, con el concierto económico como modelo.","Que la Generalitat recapti tots els impostos de Catalunya, amb el concert econòmic com a model.","Have the Catalan government collect all taxes paid in Catalonia, on the Basque fiscal-agreement model."]],
+ trabajo:[["D","En el debate de PIMEC criticó el aumento de las bajas laborales por su efecto en pymes y autónomos.","Al debat de PIMEC va criticar l'augment de les baixes laborals pel seu efecte en pimes i autònoms.","At the PIMEC debate criticised the rise in sick leave for its effect on small firms and the self-employed."],
+  ["A","Salario mínimo catalán de 1.319 € (programa de 2023).","Salari mínim català de 1.319 € (programa del 2023).","A Catalan minimum wage of €1,319 (2023 programme)."]],
+ sanidad:[["D","Más financiación para la sanidad catalana y defensa de la red concertada; se opuso a la ley de gestión pública.","Més finançament per a la sanitat catalana i defensa de la xarxa concertada; es va oposar a la llei de gestió pública.","More funding for Catalan healthcare and defence of the contracted network; opposed the public-management bill."],
+  ["A","Traspaso de los hospitales Vall d'Hebron, Bellvitge y Trueta a la Generalitat (2023).","Traspàs dels hospitals Vall d'Hebron, Bellvitge i Trueta a la Generalitat (2023).","Transfer of Vall d'Hebron, Bellvitge and Trueta hospitals to the Catalan government (2023)."]],
+ educacion:[["D","Reforzar la inmersión en catalán y rechazar las sentencias que fijan un 25 % de clases en castellano.","Reforçar la immersió en català i rebutjar les sentències que fixen un 25 % de classes en castellà.","Strengthen Catalan immersion and reject rulings requiring 25% of teaching in Spanish."],
+  ["A","Financiación estatal del 0-3 y traspaso de las becas universitarias (2023).","Finançament estatal del 0-3 i traspàs de les beques universitàries (2023).","State funding for ages 0–3 and transfer of university grants (2023)."]],
+ ciencia:[["A","Subir la inversión universitaria del 0,40 % al 0,60 % del PIB en cinco años (2023).","Apujar la inversió universitària del 0,40 % al 0,60 % del PIB en cinc anys (2023).","Raise university funding from 0.40% to 0.60% of GDP within five years (2023)."]],
+ energia:[["D","Apoya la transición energética; se abstuvo en 2025 en las votaciones sobre el calendario de cierre nuclear.","Dona suport a la transició energètica; es va abstenir el 2025 a les votacions sobre el calendari de tancament nuclear.","Backs the energy transition; abstained in the 2025 votes on the nuclear closure timetable."]],
+ territorial:[["D","Independencia por la vía de la autodeterminación; rechazó el modelo de financiación pactado en enero de 2026.","Independència per la via de l'autodeterminació; va rebutjar el model de finançament pactat el gener del 2026.","Independence through self-determination; rejected the financing model agreed in January 2026."],
+  ["D","Oficialidad del catalán en la Unión Europea.","Oficialitat del català a la Unió Europea.","Official status for Catalan in the European Union."]],
+ infra:[["D","Traspaso integral de Rodalies: vías, trenes, estaciones y recursos.","Traspàs integral de Rodalies: vies, trens, estacions i recursos.","Full transfer of Rodalies: tracks, trains, stations and funding."],
+  ["A","Traspaso de aeropuertos y puertos catalanes (2023).","Traspàs d'aeroports i ports catalans (2023).","Transfer of Catalan airports and ports (2023)."]],
+ inmigracion:[["D","Competencias plenas de inmigración para Cataluña: permisos, expulsiones y control en puertos y aeropuertos.","Competències plenes d'immigració per a Catalunya: permisos, expulsions i control a ports i aeroports.","Full immigration powers for Catalonia: permits, removals and port and airport control."],
+  ["D","Exigir catalán A2 para renovar permisos y B1 para el arraigo; diez años de padrón para vivienda protegida.","Exigir català A2 per renovar permisos i B1 per a l'arrelament; deu anys de padró per a habitatge protegit.","Require A2 Catalan to renew permits and B1 for settlement; ten years' registration for protected housing."]],
+ seguridad:[["D","Reivindica como propia la ley de multirreincidencia de 2026.","Reivindica com a pròpia la llei de multireincidència del 2026.","Claims credit for the 2026 repeat-offender law."],
+  ["D","Mossos d'Esquadra como policía integral, también en puertos y aeropuertos.","Mossos d'Esquadra com a policia integral, també a ports i aeroports.","Mossos d'Esquadra as the full police force, including at ports and airports."]],
+ justicia:[["D","Aplicación plena de la amnistía, incluido Carles Puigdemont.","Aplicació plena de l'amnistia, inclòs Carles Puigdemont.","Full application of the amnesty, including to Carles Puigdemont."],
+  ["A","Crear el Consell de Justícia de Catalunya (2023).","Crear el Consell de Justícia de Catalunya (2023).","Create a Catalan Justice Council (2023)."]],
+ pensiones:[["D","Revalorizar las pensiones con el IPC en una ley propia, sin mezclarla con otras medidas.","Revalorar les pensions amb l'IPC en una llei pròpia, sense barrejar-la amb altres mesures.","Raise pensions with inflation through a stand-alone law, not bundled with other measures."],
+  ["A","Tener en cuenta el coste de la vida de cada territorio (2023).","Tenir en compte el cost de la vida de cada territori (2023).","Factor in each territory's cost of living (2023)."]],
+ igualdad:[["A","Ley de corresponsabilidad con permisos intransferibles y equiparar las familias monoparentales a las numerosas (2023).","Llei de corresponsabilitat amb permisos intransferibles i equiparar les famílies monoparentals a les nombroses (2023).","A shared-responsibility law with non-transferable leave, and single-parent families treated like large families (2023)."]],
+ exterior:[["A","Reconocimiento del derecho de autodeterminación en la UE (2023).","Reconeixement del dret d'autodeterminació a la UE (2023).","EU recognition of the right to self-determination (2023)."]]
+ }},
+{id:"erc",short:"ERC",name:"Esquerra Republicana de Catalunya (ERC)",color:"#f3a712",head:"Gabriel Rufián",nat:"",status:"pub",q:"ERC Rufián",
+ doc:["«Eleccions al Congrés 2026. Programa electoral», 48 páginas en catalán, presentado el 5 de noviembre.","«Eleccions al Congrés 2026. Programa electoral», 48 pàgines en català, presentat el 5 de novembre.","\"Eleccions al Congrés 2026. Programa electoral\", 48 pages in Catalan, presented on 5 November."],
+ about:["Partido independentista de izquierdas. Lema de campaña: «Defensa't». Acordó con Podemos que este no se presente en Cataluña y que la lista de ERC incluya a personas de su entorno; el programa y el grupo parlamentario son de ERC.","Partit independentista d'esquerres. Lema de campanya: «Defensa't». Va acordar amb Podem que aquest no es presenti a Catalunya i que la llista d'ERC inclogui persones del seu entorn; el programa i el grup parlamentari són d'ERC.","Left-wing pro-independence party. Campaign slogan: \"Defensa't\". Agreed with Podemos that the latter would not run in Catalonia and that ERC's list would include people close to it; the programme and parliamentary group are ERC's."],
+ links:[[WEB,"https://www.esquerra.cat/"],[["Programa de 2023 (PDF)","Programa del 2023 (PDF)","2023 programme (PDF)"],"https://static.esquerra.cat/uploads/20230905/e2023-programa.pdf"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/erc"]],
+ props:{
+ vivienda:[["P","Delegar en Cataluña la capacidad de aprobar una ley propia de arrendamientos urbanos.","Delegar a Catalunya la capacitat d'aprovar una llei pròpia d'arrendaments urbans.","Delegate to Catalonia the power to pass its own urban-leasing law."],
+  ["P","Destinar al menos el 1,5 % del PIB a vivienda en los presupuestos del Estado y traspasar gratis los pisos de la Sareb y Casa 47.","Destinar almenys l'1,5 % del PIB a habitatge als pressupostos de l'Estat i traspassar gratis els pisos de la Sareb i Casa 47.","Put at least 1.5% of GDP into housing in state budgets and transfer Sareb and Casa 47 homes free of charge."],
+  ["P","IVA del 21 % al alquiler turístico y más impuestos a viviendas turísticas, segundas residencias y vacías; sin desahucios de personas vulnerables sin alternativa.","IVA del 21 % al lloguer turístic i més impostos a habitatges turístics, segones residències i buits; sense desnonaments de persones vulnerables sense alternativa.","21% VAT on tourist rentals and higher taxes on tourist, second and empty homes; no evictions of vulnerable people without an alternative."]],
+ economia:[["P","Aplicar el modelo de financiación acordado en enero de 2026 (unos 4.700 millones más al año) con la Agència Tributària de Catalunya recaudando todos los impuestos.","Aplicar el model de finançament acordat el gener del 2026 (uns 4.700 milions més l'any) amb l'Agència Tributària de Catalunya recaptant tots els impostos.","Apply the financing model agreed in January 2026 (about €4.7bn more a year) with the Catalan tax agency collecting all taxes."],
+  ["P","Subir del 30 % al 35 % el tipo máximo sobre rentas del capital y bajar el IRPF a rentas del trabajo inferiores a 35.000 €.","Apujar del 30 % al 35 % el tipus màxim sobre rendes del capital i abaixar l'IRPF a rendes del treball inferiors a 35.000 €.","Raise the top rate on capital income from 30% to 35% and cut income tax on earnings below €35,000."],
+  ["P","Hacer permanentes los impuestos a grandes fortunas y banca, recuperar el de las energéticas y derogar la «ley Beckham».","Fer permanents els impostos a grans fortunes i banca, recuperar el de les energètiques i derogar la «llei Beckham».","Make the wealth and bank taxes permanent, restore the energy-company levy and repeal the \"Beckham law\"."]],
+ trabajo:[["P","Salario mínimo en el 60 % del salario medio bruto y un salario mínimo catalán de 1.460 €.","Salari mínim en el 60 % del salari mitjà brut i un salari mínim català de 1.460 €.","Minimum wage at 60% of the average gross wage, plus a Catalan minimum wage of €1,460."],
+  ["P","Jornada de 37,5 horas sin rebaja salarial y recuperar los 45 días por despido improcedente.","Jornada de 37,5 hores sense rebaixa salarial i recuperar els 45 dies per acomiadament improcedent.","A 37.5-hour week with no pay cut and a return to 45 days' severance for unfair dismissal."]],
+ sanidad:[["P","Incluir en la cartera pública la atención dental gratuita, gafas y lentillas financiadas y psicoterapia gratuita, a cargo del Estado.","Incloure a la cartera pública l'atenció dental gratuïta, ulleres i lents de contacte finançades i psicoteràpia gratuïta, a càrrec de l'Estat.","Add free dental care, subsidised glasses and contact lenses and free psychotherapy to public coverage, paid by the State."],
+  ["P","Reducir listas de espera, frenar la privatización y más financiación estatal para plantillas y primaria.","Reduir llistes d'espera, frenar la privatització i més finançament estatal per a plantilles i primària.","Cut waiting lists, halt privatisation and increase state funding for staff and primary care."]],
+ educacion:[["P","Blindar la inmersión con el catalán como lengua vehicular y competencia exclusiva sobre el currículo.","Blindar la immersió amb el català com a llengua vehicular i competència exclusiva sobre el currículum.","Protect immersion with Catalan as the teaching language and exclusive powers over the curriculum."],
+  ["P","Subir el gasto educativo al 6 % del PIB y 0-3 público, universal y gratuito con fondos estatales.","Apujar la despesa educativa al 6 % del PIB i 0-3 públic, universal i gratuït amb fons estatals.","Raise education spending to 6% of GDP and make 0–3 schooling public, universal and free with state funds."]],
+ ciencia:[["P","Elevar la inversión en investigación al 1,5 % del PIB y la universitaria al 1 % en 2030.","Elevar la inversió en recerca a l'1,5 % del PIB i la universitària a l'1 % el 2030.","Raise research spending to 1.5% of GDP and university funding to 1% by 2030."],
+  ["P","Suprimir el distrito único universitario y que la agencia catalana AQU asuma las funciones de la ANECA.","Suprimir el districte únic universitari i que l'agència catalana AQU assumeixi les funcions de l'ANECA.","Abolish the single university admissions district and have the Catalan agency AQU take over ANECA's functions."]],
+ energia:[["P","Reducir las emisiones de CO2 al menos un 65 % en 2030 y un 95 % en 2040; sistema 100 % renovable y descentralizado.","Reduir les emissions de CO2 almenys un 65 % el 2030 i un 95 % el 2040; sistema 100 % renovable i descentralitzat.","Cut CO2 emissions by at least 65% by 2030 and 95% by 2040; a 100% renewable, decentralised system."],
+  ["P","4.000 puntos de carga rápida antes de 2030 y autoconsumo compartido hasta 10 km (20 km en zonas rurales).","4.000 punts de càrrega ràpida abans del 2030 i autoconsum compartit fins a 10 km (20 km en zones rurals).","4,000 fast-charging points before 2030 and shared self-consumption up to 10 km (20 km in rural areas)."]],
+ territorial:[["P","Negociar un referéndum de autodeterminación con facilitación internacional de la UE y el Consejo de Europa.","Negociar un referèndum d'autodeterminació amb facilitació internacional de la UE i el Consell d'Europa.","Negotiate a self-determination referendum with international facilitation by the EU and Council of Europe."],
+  ["P","Ley de plurilingüismo y oficialidad del catalán en la UE; traspaso de la Inspección de Trabajo y las prestaciones de paro.","Llei de plurilingüisme i oficialitat del català a la UE; traspàs de la Inspecció de Treball i les prestacions d'atur.","A multilingualism law and official EU status for Catalan; transfer of the Labour Inspectorate and unemployment benefits."]],
+ infra:[["P","Completar el traspaso de la línea R1 de Rodalies.","Completar el traspàs de la línia R1 de Rodalies.","Complete the transfer of the Rodalies R1 line."],
+  ["P","Que el Estado pague 435 millones por las desaladoras de la Tordera y el Foix.","Que l'Estat pagui 435 milions per les dessalinitzadores de la Tordera i el Foix.","Have the State pay €435m for the Tordera and Foix desalination plants."]],
+ inmigracion:[["P","Traspasar a Cataluña todas las competencias de migración y asilo, con enfoque de derechos humanos.","Traspassar a Catalunya totes les competències de migració i asil, amb enfocament de drets humans.","Transfer all migration and asylum powers to Catalonia, with a human-rights approach."],
+  ["P","Rechazo a los centros de retorno en terceros países y vías legales y seguras de migración.","Rebuig als centres de retorn a tercers països i vies legals i segures de migració.","Reject return centres in third countries; open legal and safe migration routes."]],
+ seguridad:[["P","Mossos como única policía en toda Cataluña, incluidos puertos y aeropuertos, y control pleno del tráfico.","Mossos com a única policia a tot Catalunya, inclosos ports i aeroports, i control ple del trànsit.","Mossos as the sole police force across Catalonia, including ports and airports, with full control of traffic."],
+  ["P","Más penas por tenencia ilegal de armas y robo de cable; 180 nuevas plazas de juez; derogar la «ley mordaza».","Més penes per tinença il·legal d'armes i robatori de cable; 180 noves places de jutge; derogar la «llei mordassa».","Tougher penalties for illegal weapons and cable theft; 180 new judge posts; repeal the \"gag law\"."]],
+ justicia:[["P","Crear el Consell de Justícia de Catalunya, con competencias sobre nombramientos, inspección y disciplina.","Crear el Consell de Justícia de Catalunya, amb competències sobre nomenaments, inspecció i disciplina.","Create a Catalan Justice Council with powers over appointments, inspection and discipline."],
+  ["P","Suprimir los delitos de injurias a la Corona y de ofensa a los sentimientos religiosos.","Suprimir els delictes d'injúries a la Corona i d'ofensa als sentiments religiosos.","Abolish the offences of insulting the Crown and offending religious feelings."]],
+ pensiones:[["P","Revalorizar las pensiones con el IPC de cada territorio.","Revalorar les pensions amb l'IPC de cada territori.","Raise pensions in line with each territory's own inflation rate."],
+  ["P","Jubilación anticipada sin penalización en trabajos penosos y cotización de autónomos por ingresos reales.","Jubilació anticipada sense penalització en feines penoses i cotització d'autònoms per ingressos reals.","Penalty-free early retirement for arduous jobs and self-employed contributions based on real income."]],
+ igualdad:[["P","Reformar la ley de violencia de género de 2004 para incluir la violencia económica, vicaria y digital.","Reformar la llei de violència de gènere del 2004 per incloure-hi la violència econòmica, vicària i digital.","Reform the 2004 gender-violence law to cover economic, vicarious and digital violence."],
+  ["P","Prestación universal por crianza de al menos 200 € y reconocimiento legal de las identidades no binarias.","Prestació universal per criança d'almenys 200 € i reconeixement legal de les identitats no binàries.","A universal child-rearing benefit of at least €200 and legal recognition of non-binary identities."]],
+ exterior:[["P","Embargo total de armas a Israel y suspensión del acuerdo de asociación UE-Israel.","Embargament total d'armes a Israel i suspensió de l'acord d'associació UE-Israel.","A full arms embargo on Israel and suspension of the EU–Israel association agreement."],
+  ["P","Revertir la posición de 2022 sobre el Sáhara Occidental, seguir apoyando a Ucrania y autonomía estratégica europea.","Revertir la posició del 2022 sobre el Sàhara Occidental, continuar donant suport a Ucraïna i autonomia estratègica europea.","Reverse the 2022 stance on Western Sahara, keep supporting Ukraine and build European strategic autonomy."]]
+ }},
+{id:"fo",short:"Frente Obrero",name:"Frente Obrero (FO)",color:"#8a1c1c",head:"Daniel Carro Peralta",nat:"Roberto Vaquero",status:"none",q:"Frente Obrero Roberto Vaquero",
+ doc:["Sin programa electoral del 29N. Publicó el 7 de octubre de 2026 su programa político, «Un programa para recuperar España», que según el propio partido no pretende ser un programa electoral.","Sense programa electoral del 29N. Va publicar el 7 d'octubre del 2026 el seu programa polític, «Un programa para recuperar España», que segons el mateix partit no pretén ser un programa electoral.","No 29N manifesto. On 7 October 2026 it published its political programme, \"Un programa para recuperar España\", which the party itself says is not meant as an election manifesto."],
+ about:["Se define como movimiento patriota y revolucionario. Lema: «Defendamos España». Se presenta en las 52 circunscripciones.","Es defineix com a moviment patriota i revolucionari. Lema: «Defendamos España». Es presenta a les 52 circumscripcions.","Describes itself as a patriotic and revolutionary movement. Slogan: \"Defendamos España\". Running in all 52 constituencies."],
+ links:[[WEB,"https://frenteobrero.es/frente-obrero-candidatura-elecciones-generales-29n-defendamos-espana/"],[["Resumen en Antes de Votar","Resum a Antes de Votar","Summary on Antes de Votar"],"https://antesdevotar.org/partido/frenteobrero/"]],
+ props:{
+ vivienda:[["A","Construir vivienda pública asequible y frenar los desahucios de familias trabajadoras vulnerables sin alternativa, con dación en pago.","Construir habitatge públic assequible i frenar els desnonaments de famílies treballadores vulnerables sense alternativa, amb dació en pagament.","Build affordable public housing and halt evictions of vulnerable working families without an alternative, with debt cancellation on handover."],
+  ["A","Orientar la vivienda pública a los «españoles autóctonos».","Orientar l'habitatge públic als «espanyols autòctons».","Direct public housing towards \"native Spaniards\"."]],
+ economia:[["A","Bajar el IRPF a las rentas bajas y subirlo a las altas; IVA superreducido en productos de primera necesidad.","Abaixar l'IRPF a les rendes baixes i apujar-lo a les altes; IVA superreduït en productes de primera necessitat.","Cut income tax for low earners and raise it for high earners; super-reduced VAT on essentials."],
+  ["A","Nacionalizar sectores estratégicos.","Nacionalitzar sectors estratègics.","Nationalise strategic sectors."]],
+ trabajo:[["A","Subidas salariales ligadas al coste de la vida; restringir los contratos temporales y prohibir las ETT.","Pujades salarials lligades al cost de la vida; restringir els contractes temporals i prohibir les ETT.","Wage rises tied to the cost of living; restrict temporary contracts and ban temp agencies."]],
+ territorial:[["A","Autonomías simétricas, devolver al Estado sanidad, educación y emergencias y suprimir las policías autonómicas.","Autonomies simètriques, tornar a l'Estat sanitat, educació i emergències i suprimir les policies autonòmiques.","Symmetric regions, return health, education and emergencies to the State and abolish regional police forces."],
+  ["A","Abrir un proceso constituyente.","Obrir un procés constituent.","Open a constituent process."]],
+ inmigracion:[["A","Control total de fronteras y expulsión inmediata de inmigrantes en situación irregular o que delincan de forma reiterada.","Control total de fronteres i expulsió immediata d'immigrants en situació irregular o que delinqueixin de manera reiterada.","Full border control and immediate removal of irregular migrants or repeat offenders."],
+  ["A","Parar la concesión de nacionalidades hasta revisar las de los últimos veinte años.","Aturar la concessió de nacionalitats fins a revisar les dels darrers vint anys.","Stop granting nationality until grants from the last twenty years are reviewed."]],
+ justicia:[["A","Prohibir los indultos por corrupción política y endurecer sus penas.","Prohibir els indults per corrupció política i endurir-ne les penes.","Ban pardons for political corruption and toughen penalties."]],
+ pensiones:[["A","Revertir el aumento de la edad de jubilación y subir las pensiones mínimas y no contributivas.","Revertir l'augment de l'edat de jubilació i apujar les pensions mínimes i no contributives.","Reverse the rise in retirement age and raise minimum and non-contributory pensions."]],
+ exterior:[["A","Salir de la Unión Europea y de la OTAN.","Sortir de la Unió Europea i de l'OTAN.","Leave the European Union and NATO."]]
+ }},
+{id:"salf",short:"SALF",name:"Se Acabó La Fiesta (SALF)",color:"#3a3a3a",head:"Yolanda López Carreño",nat:"Luis «Alvise» Pérez",status:"none",q:"Se Acabó La Fiesta Alvise",
+ doc:["Sin programa del 29N localizado. Las posiciones proceden del acto de Vistalegre y de los «contratos electorales» autonómicos de Castilla y León y Andalucía (2026), que no son programas estatales.","Sense programa del 29N localitzat. Les posicions provenen de l'acte de Vistalegre i dels «contractes electorals» autonòmics de Castella i Lleó i Andalusia (2026), que no són programes estatals.","No 29N programme found. Positions come from the Vistalegre rally and the regional \"electoral contracts\" for Castilla y León and Andalucía (2026), which are not national programmes."],
+ about:["Partido del eurodiputado Alvise Pérez, que encabeza la lista por Madrid.","Partit de l'eurodiputat Alvise Pérez, que encapçala la llista per Madrid.","Party of MEP Alvise Pérez, who heads the Madrid list."],
+ links:[[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/se-acabo-la-fiesta"]],
+ props:{
+ vivienda:[["D","Hacer urbanizable todo el suelo salvo razones objetivas, cero impuestos en la compra de la primera vivienda y sin topes al alquiler.","Fer urbanitzable tot el sòl llevat de raons objectives, zero impostos en la compra del primer habitatge i sense límits al lloguer.","Make all land buildable unless there are objective reasons not to, zero tax on a first-home purchase and no rent caps."],
+  ["D","Ley antiokupación con desalojo policial en 24 horas.","Llei antiocupació amb desallotjament policial en 24 hores.","Anti-squatting law with police eviction within 24 hours."]],
+ economia:[["D","IRPF del 0 % para ingresos inferiores a 35.000 € al año y supresión de Patrimonio y Sucesiones.","IRPF del 0 % per a ingressos inferiors a 35.000 € l'any i supressió de Patrimoni i Successions.","0% income tax on earnings under €35,000 a year and abolition of wealth and inheritance taxes."],
+  ["D","Recortar subvenciones a partidos, sindicatos y patronales y reducir al menos un 70 % los asesores y altos cargos.","Retallar subvencions a partits, sindicats i patronals i reduir almenys un 70 % els assessors i alts càrrecs.","Cut subsidies to parties, unions and employers' bodies and reduce advisers and senior posts by at least 70%."]],
+ sanidad:[["D","Esperas máximas de 30 días para el especialista y 90 para cirugía, recurriendo a clínicas privadas sin coste para el paciente.","Esperes màximes de 30 dies per a l'especialista i 90 per a cirurgia, recorrent a clíniques privades sense cost per al pacient.","Maximum waits of 30 days for a specialist and 90 for surgery, using private clinics at no cost to patients."]],
+ educacion:[["D","Currículo nacional único, exámenes externos y educación gratuita de 0 a 3 años.","Currículum nacional únic, exàmens externs i educació gratuïta de 0 a 3 anys.","A single national curriculum, external exams and free education from 0 to 3."]],
+ energia:[["D","Pausar el calendario de cierre nuclear y estudiar reactores modulares pequeños.","Pausar el calendari de tancament nuclear i estudiar reactors modulars petits.","Pause the nuclear phase-out timetable and explore small modular reactors."]],
+ territorial:[["D","Centralizar compras públicas y reforma electoral para que cada voto valga lo mismo en todas las provincias.","Centralitzar compres públiques i reforma electoral perquè cada vot valgui el mateix a totes les províncies.","Centralise public purchasing and reform the electoral system so every vote carries equal weight across provinces."]],
+ inmigracion:[["D","Plan de deportación masiva de inmigrantes irregulares, financiado con la ayuda al desarrollo.","Pla de deportació massiva d'immigrants irregulars, finançat amb l'ajuda al desenvolupament.","A mass-deportation plan for irregular migrants, funded from development aid."],
+  ["D","Prioridad de españoles y residentes legales en ayudas sociales y vivienda protegida.","Prioritat d'espanyols i residents legals en ajuts socials i habitatge protegit.","Priority for Spaniards and legal residents in social aid and protected housing."]],
+ seguridad:[["D","Macrocárcel de máxima seguridad para reincidentes inspirada en la de El Salvador.","Macropresó de màxima seguretat per a reincidents inspirada en la d'El Salvador.","A maximum-security mega-prison for repeat offenders modelled on El Salvador's."]],
+ justicia:[["D","Delitos de corrupción imprescriptibles y canal anónimo de denuncia con recompensa del 10 % de lo recuperado.","Delictes de corrupció imprescriptibles i canal anònim de denúncia amb recompensa del 10 % del que es recuperi.","No time limit on corruption offences and an anonymous reporting channel with a 10% reward on recovered funds."]],
+ pensiones:[["D","Califica el sistema de «estafa piramidal» y promete reformarlo, sin plan concreto.","Qualifica el sistema d'«estafa piramidal» i promet reformar-lo, sense pla concret.","Calls the system a \"pyramid scam\" and promises reform, without a concrete plan."]],
+ exterior:[["D","Referéndum sobre la pertenencia a la UE si no se renegocia la relación; contra el rearme europeo y el apoyo a Ucrania.","Referèndum sobre la pertinença a la UE si no es renegocia la relació; contra el rearmament europeu i el suport a Ucraïna.","A referendum on EU membership if the relationship is not renegotiated; against EU rearmament and support for Ukraine."]]
+ }},
+{id:"pctc",short:"PCTC",name:"Partit Comunista dels Treballadors de Catalunya (PCTC)",color:"#b3001b",head:"Maria Rodríguez-Farge Hijano",nat:"Ástor García (PCTE)",status:"none",q:"PCTE PCTC Ástor García",
+ doc:["No se ha localizado ningún programa ni documento de propuestas para el 29N en las fuentes consultadas.","No s'ha localitzat cap programa ni document de propostes per al 29N a les fonts consultades.","No programme or proposals document for 29N was found in the sources consulted."],
+ about:["Referente catalán del Partido Comunista de los Trabajadores de España (PCTE).","Referent català del Partido Comunista de los Trabajadores de España (PCTE).","Catalan counterpart of the Communist Party of the Workers of Spain (PCTE)."],
+ links:[],props:{}}
+];
+
+PARTIES.push(
+{id:"vox",short:"Vox",name:"Vox",color:"#5ba72b",head:"Juan José Aizcorbe",nat:"Santiago Abascal",status:"pub",q:"Vox Abascal",
+ doc:["«Es sentido común», 115 medidas en 55 páginas, publicado el 12 de noviembre.","«Es sentido común», 115 mesures en 55 pàgines, publicat el 12 de novembre.","\"Es sentido común\", 115 measures over 55 pages, published on 12 November."],
+ about:["Abascal encabeza la lista por Madrid. Varias propuestas del programa de 2023 (devolver competencias al Estado, suprimir policías autonómicas) no figuran en el de 2026.","Abascal encapçala la llista per Madrid. Diverses propostes del programa del 2023 (tornar competències a l'Estat, suprimir policies autonòmiques) no figuren en el del 2026.","Abascal heads the Madrid list. Several 2023 proposals (returning powers to the State, abolishing regional police) do not appear in the 2026 programme."],
+ links:[[WEB,"https://www.voxespana.es/"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/vox"]],
+ props:{
+ vivienda:[["P","«Prioridad nacional» en el acceso a vivienda protegida y ayudas al alquiler.","«Prioritat nacional» en l'accés a habitatge protegit i ajuts al lloguer.","\"National priority\" in access to protected housing and rent aid."],
+  ["P","IVA del 0 % en la primera vivienda de obra nueva y bonificación del 100 % del ITP en segunda mano.","IVA del 0 % en el primer habitatge d'obra nova i bonificació del 100 % de l'ITP en segona mà.","0% VAT on a new-build first home and a 100% rebate on transfer tax for second-hand homes."],
+  ["P","Derogar la Ley de Vivienda, reformar la Ley del Suelo y desalojar okupas en menos de 24 horas.","Derogar la Llei d'habitatge, reformar la Llei del sòl i desallotjar ocupes en menys de 24 hores.","Repeal the Housing Law, reform the Land Law and evict squatters within 24 hours."],
+  ["P","Fiscalidad disuasoria para compradores no comunitarios y fondos especulativos.","Fiscalitat dissuasiva per a compradors no comunitaris i fons especulatius.","Deterrent taxation for non-EU buyers and speculative funds."]],
+ economia:[["P","Bajada de IRPF, IVA y Sociedades, sin tipos concretos, y rebaja del IRPF según el número de hijos.","Baixada d'IRPF, IVA i Societats, sense tipus concrets, i rebaixa de l'IRPF segons el nombre de fills.","Cuts to income tax, VAT and corporation tax, with no specific rates, and income-tax relief by number of children."],
+  ["P","Cuota cero para autónomos con ingresos inferiores al salario mínimo; gravamen a las remesas y plan de reindustrialización.","Quota zero per a autònoms amb ingressos inferiors al salari mínim; gravamen a les remeses i pla de reindustrialització.","Zero contributions for self-employed people earning under the minimum wage; a levy on remittances and a reindustrialisation plan."]],
+ trabajo:[["P","Derogar «la legislación laboral de Sánchez».","Derogar «la legislació laboral de Sánchez».","Repeal \"Sánchez's labour legislation\"."]],
+ sanidad:[["P","Tarjeta sanitaria única e historia clínica compartida en toda España.","Targeta sanitària única i història clínica compartida a tot Espanya.","A single health card and shared medical records across Spain."],
+  ["P","Plan nacional contra las listas de espera con colaboración público-privada; sanidad para extranjeros en situación irregular solo en urgencia grave.","Pla nacional contra les llistes d'espera amb col·laboració publicoprivada; sanitat per a estrangers en situació irregular només en urgència greu.","A national waiting-list plan with public-private cooperation; healthcare for irregular migrants only in serious emergencies."]],
+ educacion:[["P","Derogar la LOMLOE, currículo unificado, evaluaciones nacionales y EVAU única.","Derogar la LOMLOE, currículum unificat, avaluacions nacionals i EVAU única.","Repeal the LOMLOE education law; unified curriculum, national assessments and a single university entrance exam."],
+  ["P","Libre elección de centro, gratuidad de 0 a 3 años y eliminar el programa de Lengua Árabe y Cultura Marroquí.","Lliure elecció de centre, gratuïtat de 0 a 3 anys i eliminar el programa de Llengua Àrab i Cultura Marroquina.","Free school choice, free 0–3 education and an end to the Arabic Language and Moroccan Culture programme."]],
+ energia:[["P","Derogar el calendario de cierre nuclear y estudiar nuevas centrales.","Derogar el calendari de tancament nuclear i estudiar noves centrals.","Scrap the nuclear closure timetable and study new plants."],
+  ["P","Revertir normas del Pacto Verde y la Agenda 2030, acabar con las zonas de bajas emisiones y Plan Nacional del Agua con interconexión de cuencas.","Revertir normes del Pacte Verd i l'Agenda 2030, acabar amb les zones de baixes emissions i Pla Nacional de l'Aigua amb interconnexió de conques.","Roll back Green Deal and 2030 Agenda rules, end low-emission zones and a National Water Plan linking all river basins."]],
+ territorial:[["P","Ley de Unidad de Mercado; recuperar el delito de sedición e ilegalizar partidos que atenten contra la unidad de España.","Llei d'unitat de mercat; recuperar el delicte de sedició i il·legalitzar partits que atemptin contra la unitat d'Espanya.","A market-unity law; restore the offence of sedition and outlaw parties that attack the unity of Spain."],
+  ["A","Garantizar el derecho a ser educado en español en toda España (programa de 2023).","Garantir el dret a ser educat en espanyol a tot Espanya (programa del 2023).","Guarantee the right to be schooled in Spanish throughout Spain (2023 programme)."]],
+ inmigracion:[["P","Prohibir las regularizaciones masivas, suprimir el arraigo y repatriar a quien esté en situación irregular.","Prohibir les regularitzacions massives, suprimir l'arrelament i repatriar qui estigui en situació irregular.","Ban mass regularisations, abolish settlement permits and repatriate people in an irregular situation."],
+  ["P","Plan de «remigración» y prioridad nacional en vivienda pública, ayudas y servicios sociales.","Pla de «remigració» i prioritat nacional en habitatge públic, ajuts i serveis socials.","A \"remigration\" plan and national priority in public housing, benefits and social services."]],
+ seguridad:[["P","Reducir la edad de responsabilidad penal y ampliar la prisión permanente revisable.","Reduir l'edat de responsabilitat penal i ampliar la presó permanent revisable.","Lower the age of criminal responsibility and widen reviewable life imprisonment."],
+  ["P","Prohibir el burka y el niqab en espacios públicos; equiparación salarial de policías y guardias civiles.","Prohibir el burca i el nicab en espais públics; equiparació salarial de policies i guàrdies civils.","Ban the burqa and niqab in public spaces; equal pay for national police and Guardia Civil."]],
+ justicia:[["P","Que los doce vocales judiciales del CGPJ los elijan los propios jueces.","Que els dotze vocals judicials del CGPJ els triïn els mateixos jutges.","Have judges themselves elect the twelve judicial members of the judiciary council."],
+  ["P","Prohibir indultos por corrupción y contra la integridad territorial; reforma de RTVE.","Prohibir indults per corrupció i contra la integritat territorial; reforma de RTVE.","Ban pardons for corruption and offences against territorial integrity; reform RTVE."]],
+ pensiones:[["P","Una medida genérica: garantizar la sostenibilidad del sistema, ligada a productividad y natalidad, sin reformas concretas.","Una mesura genèrica: garantir la sostenibilitat del sistema, lligada a productivitat i natalitat, sense reformes concretes.","One general measure: guarantee the system's sustainability, linked to productivity and birth rates, with no specific reforms."],
+  ["P","Cotización financiada por el Estado para quienes cuidan a sus hijos.","Cotització finançada per l'Estat per a qui té cura dels fills.","State-funded contributions for people caring for their children."]],
+ igualdad:[["P","Derogar las «leyes de género» y regir el deporte femenino por «criterios biológicos».","Derogar les «lleis de gènere» i regir l'esport femení per «criteris biològics».","Repeal \"gender laws\" and govern women's sport by \"biological criteria\"."],
+  ["P","Defensa del «derecho a la vida desde su concepción hasta la muerte natural».","Defensa del «dret a la vida des de la concepció fins a la mort natural».","Defence of the \"right to life from conception to natural death\"."]],
+ exterior:[["P","Sanciones a Marruecos y militarización de la frontera de Ceuta y Melilla.","Sancions al Marroc i militarització de la frontera de Ceuta i Melilla.","Sanctions on Morocco and militarisation of the Ceuta and Melilla border."],
+  ["P","Rechazar el acuerdo UE-Mercosur y aumentar la inversión en Defensa sin fijar porcentaje; el programa no menciona la OTAN ni Ucrania.","Rebutjar l'acord UE-Mercosur i augmentar la inversió en Defensa sense fixar percentatge; el programa no esmenta l'OTAN ni Ucraïna.","Reject the EU–Mercosur deal and raise defence investment with no set percentage; the programme does not mention NATO or Ukraine."]]
+ }},
+{id:"comuns",short:"Comuns-Front Ampli",name:"Comuns-Front Ampli (Frente Amplio)",color:"#c2187a",head:"Ada Colau",nat:"Ada Colau",status:"pub",q:"Frente Amplio Comuns Colau",
+ doc:["«100+15»: cien medidas generales en 17 ejes más quince para Galicia, presentado el 12 de noviembre en Santiago. No se ha localizado el texto íntegro: solo se marcan con P las medidas que la prensa atribuye al programa.","«100+15»: cent mesures generals en 17 eixos més quinze per a Galícia, presentat el 12 de novembre a Santiago. No s'ha localitzat el text íntegre: només es marquen amb P les mesures que la premsa atribueix al programa.","\"100+15\": one hundred general measures in 17 areas plus fifteen for Galicia, presented on 12 November in Santiago. The full text was not found: only measures the press attributes to the programme are tagged P."],
+ about:["Coalición de quince fuerzas encabezada por Ada Colau, con Movimiento Sumar, Izquierda Unida, Más Madrid y Comuns, entre otras. Socio del PSOE en el Gobierno saliente.","Coalició de quinze forces encapçalada per Ada Colau, amb Movimiento Sumar, Izquierda Unida, Más Madrid i Comuns, entre d'altres. Soci del PSOE al Govern sortint.","A fifteen-party coalition led by Ada Colau, including Movimiento Sumar, Izquierda Unida, Más Madrid and Comuns. PSOE's partner in the outgoing government."],
+ links:[[WEB,"https://frenteamplio.info/"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/sumar"]],
+ props:{
+ vivienda:[["P","Prohibir que empresas y fondos compren vivienda.","Prohibir que empreses i fons comprin habitatge.","Ban companies and funds from buying homes."],
+  ["D","Prórroga de los contratos de alquiler y suspensión de desahucios de hogares vulnerables hasta 2030 (decretos del Gobierno).","Pròrroga dels contractes de lloguer i suspensió de desnonaments de llars vulnerables fins al 2030 (decrets del Govern).","Extend rental contracts and suspend evictions of vulnerable households until 2030 (government decrees)."],
+  ["A","Dedicar el 1 % del PIB durante diez años a dos millones de viviendas de alquiler asequible (Sumar 2023).","Dedicar l'1 % del PIB durant deu anys a dos milions d'habitatges de lloguer assequible (Sumar 2023).","Spend 1% of GDP for ten years on two million affordable rental homes (Sumar 2023)."]],
+ economia:[["D","Subir el tipo efectivo de las grandes empresas y la banca; la coalición calcula 10.000 millones más al año.","Apujar el tipus efectiu de les grans empreses i la banca; la coalició calcula 10.000 milions més l'any.","Raise the effective tax rate on large companies and banks; the coalition estimates €10bn more a year."],
+  ["D","Impuesto estatal de sucesiones y donaciones para importes superiores a un millón de euros.","Impost estatal de successions i donacions per a imports superiors a un milió d'euros.","A state inheritance and gift tax on amounts above €1 million."]],
+ trabajo:[["P","Jornada de 37,5 horas semanales sin rebaja salarial.","Jornada de 37,5 hores setmanals sense rebaixa salarial.","A 37.5-hour week with no pay cut."],
+  ["P","Nuevas subidas del salario mínimo.","Noves pujades del salari mínim.","Further minimum-wage rises."]],
+ sanidad:[["D","Gestión pública de la sanidad por defecto, con la gestión privada como excepción.","Gestió pública de la sanitat per defecte, amb la gestió privada com a excepció.","Public management of healthcare by default, with private management as the exception."],
+  ["P","Crear una empresa farmacéutica pública (según la prensa, con sede en Santiago).","Crear una empresa farmacèutica pública (segons la premsa, amb seu a Santiago).","Create a public pharmaceutical company (based in Santiago, according to press reports)."],
+  ["A","Incorporar atención dental, óptica y psicoterapia a la cartera pública (Sumar 2023).","Incorporar atenció dental, òptica i psicoteràpia a la cartera pública (Sumar 2023).","Add dental, optical care and psychotherapy to public coverage (Sumar 2023)."]],
+ educacion:[["D","Máximo de 20 alumnos por aula en Primaria y ESO (proposición decaída).","Màxim de 20 alumnes per aula a Primària i ESO (proposició decaiguda).","A cap of 20 pupils per class in primary and lower secondary (lapsed bill)."],
+  ["A","0-3 gratuito y reducción gradual de las tasas universitarias hasta cero (Sumar 2023).","0-3 gratuït i reducció gradual de les taxes universitàries fins a zero (Sumar 2023).","Free 0–3 education and university fees phased down to zero (Sumar 2023)."]],
+ energia:[["D","Mantener el calendario de cierre de las nucleares y oponerse a prorrogar Almaraz.","Mantenir el calendari de tancament de les nuclears i oposar-se a prorrogar Almaraz.","Keep the nuclear closure timetable and oppose extending Almaraz."],
+  ["A","90 % de electricidad renovable en 2030 y neutralidad climática en 2040 (Sumar 2023).","90 % d'electricitat renovable el 2030 i neutralitat climàtica el 2040 (Sumar 2023).","90% renewable electricity by 2030 and net zero by 2040 (Sumar 2023)."]],
+ territorial:[["A","Reconocer la plurinacionalidad en un nuevo pacto territorial y reformar la financiación autonómica (Sumar 2023).","Reconèixer la plurinacionalitat en un nou pacte territorial i reformar el finançament autonòmic (Sumar 2023).","Recognise Spain as plurinational in a new territorial pact and reform regional financing (Sumar 2023)."],
+  ["A","Cataluña: mantener la mesa de diálogo y someter cualquier acuerdo a votación de la ciudadanía catalana (Sumar 2023).","Catalunya: mantenir la taula de diàleg i sotmetre qualsevol acord a votació de la ciutadania catalana (Sumar 2023).","Catalonia: keep the dialogue table and put any agreement to a vote of Catalan citizens (Sumar 2023)."]],
+ infra:[["D","Urtasun propuso en el debate de PIMEC destinar a Rodalies el dinero previsto para acelerar el AVE.","Urtasun va proposar al debat de PIMEC destinar a Rodalies els diners previstos per accelerar l'AVE.","At the PIMEC debate Urtasun proposed redirecting money earmarked for faster high-speed trains to Rodalies."],
+  ["A","Sustituir vuelos cortos por tren y recuperar el tren nocturno (Sumar 2023).","Substituir vols curts per tren i recuperar el tren nocturn (Sumar 2023).","Replace short flights with rail and bring back night trains (Sumar 2023)."]],
+ inmigracion:[["D","Apoyo a la regularización extraordinaria de 2026.","Suport a la regularització extraordinària del 2026.","Support for the 2026 extraordinary regularisation."],
+  ["A","Procedimiento permanente de regularización, cierre de los CIE y ley integral contra el racismo (Sumar 2023).","Procediment permanent de regularització, tancament dels CIE i llei integral contra el racisme (Sumar 2023).","A permanent regularisation procedure, closure of detention centres and a comprehensive anti-racism law (Sumar 2023)."]],
+ seguridad:[["D","Reformar la «ley mordaza» y prohibir las pelotas de goma; votó contra la ley de multirreincidencia.","Reformar la «llei mordassa» i prohibir les pilotes de goma; va votar contra la llei de multireincidència.","Reform the \"gag law\" and ban rubber bullets; voted against the repeat-offender law."]],
+ justicia:[["A","Cambiar el sistema de elección del CGPJ y que los fiscales dirijan la instrucción (Sumar 2023).","Canviar el sistema d'elecció del CGPJ i que els fiscals dirigeixin la instrucció (Sumar 2023).","Change how the judiciary council is elected and have prosecutors lead investigations (Sumar 2023)."]],
+ pensiones:[["A","Revalorización con el IPC por ley y subir las mínimas hasta el umbral de pobreza (Sumar 2023).","Revaloració amb l'IPC per llei i apujar les mínimes fins al llindar de pobresa (Sumar 2023).","Inflation indexing by law and minimum pensions raised to the poverty line (Sumar 2023)."]],
+ igualdad:[["P","Prestación universal de 200 € al mes por cada menor hasta los 18 años.","Prestació universal de 200 € al mes per cada menor fins als 18 anys.","A universal benefit of €200 a month per child up to age 18."],
+  ["D","Rechazo a cualquier retroceso en las leyes del aborto y la eutanasia.","Rebuig a qualsevol retrocés en les lleis de l'avortament i l'eutanàsia.","Opposition to any rollback of the abortion and euthanasia laws."]],
+ exterior:[["D","Contra subir el gasto militar hacia los objetivos de la OTAN; embargo de armas a Israel sin excepciones.","Contra apujar la despesa militar cap als objectius de l'OTAN; embargament d'armes a Israel sense excepcions.","Against raising military spending towards NATO targets; an arms embargo on Israel without exceptions."],
+  ["A","Revertir el giro de 2022 sobre el Sáhara Occidental (Sumar 2023).","Revertir el gir del 2022 sobre el Sàhara Occidental (Sumar 2023).","Reverse the 2022 shift on Western Sahara (Sumar 2023)."]]
+ }},
+{id:"pp",short:"PP",name:"Partit Popular / Partido Popular (PP)",color:"#1d84ce",head:"Xavier García Albiol",nat:"Alberto Núñez Feijóo",status:"pub",q:"Partido Popular Feijóo",
+ doc:["«La Reconstrucción Nacional», 249 medidas en 82 páginas y cuatro pilares, presentado el 10 de noviembre.","«La Reconstrucción Nacional», 249 mesures en 82 pàgines i quatre pilars, presentat el 10 de novembre.","\"La Reconstrucción Nacional\", 249 measures over 82 pages and four pillars, presented on 10 November."],
+ about:["Principal partido de la oposición. Feijóo abrió la campaña catalana en Badalona junto a García Albiol.","Principal partit de l'oposició. Feijóo va obrir la campanya catalana a Badalona al costat de García Albiol.","Main opposition party. Feijóo opened the Catalan campaign in Badalona alongside García Albiol."],
+ links:[[["Programa oficial (PDF)","Programa oficial (PDF)","Official programme (PDF)"],"https://www.pp.es/wp-content/uploads/2026/11/LA-RECONSTRUCCION-NACIONAL.pdf"],[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/pp"]],
+ props:{
+ vivienda:[["P","Impulsar un millón de viviendas, nueva Ley del Suelo y licencias resueltas en tres meses con silencio positivo.","Impulsar un milió d'habitatges, nova Llei del sòl i llicències resoltes en tres mesos amb silenci positiu.","Drive one million new homes, a new Land Law and building permits resolved within three months, approved by default."],
+  ["P","IVA del 4 % en la primera vivienda de menores de 40 años y aval público del 20 % del valor.","IVA del 4 % en el primer habitatge de menors de 40 anys i aval públic del 20 % del valor.","4% VAT on first homes for under-40s and a public guarantee for 20% of the value."],
+  ["P","Derogar la Ley de Vivienda y las zonas tensionadas; desalojo de okupas en 48 horas.","Derogar la Llei d'habitatge i les zones tensionades; desallotjament d'ocupes en 48 hores.","Repeal the Housing Law and stressed-area designations; evict squatters within 48 hours."]],
+ economia:[["P","Auditoría del gasto público en los primeros cien días y menos ministerios, altos cargos y asesores.","Auditoria de la despesa pública en els primers cent dies i menys ministeris, alts càrrecs i assessors.","A public-spending audit in the first hundred days and fewer ministries, senior posts and advisers."],
+  ["P","Jóvenes de 18 a 35 años sin IRPF el primer año de trabajo y con rebajas decrecientes los tres siguientes; deflactar la tarifa.","Joves de 18 a 35 anys sense IRPF el primer any de feina i amb rebaixes decreixents els tres següents; deflactar la tarifa.","No income tax for 18–35s in their first working year, with tapering relief over the next three; index tax bands to inflation."],
+  ["P","IVA del 0 % en alimentos básicos mientras dure la crisis de inflación y del 10 % en luz y gas; exención de IVA para autónomos que facturen menos de 85.000 €.","IVA del 0 % en aliments bàsics mentre duri la crisi d'inflació i del 10 % en llum i gas; exempció d'IVA per a autònoms que facturin menys de 85.000 €.","0% VAT on basic foods while the inflation crisis lasts and 10% on electricity and gas; VAT exemption for self-employed billing under €85,000."]],
+ trabajo:[["P","Plan contra el absentismo fraudulento y cheque de formación.","Pla contra l'absentisme fraudulent i xec de formació.","A plan against fraudulent absenteeism and a training voucher."],
+  ["P","Sin cotizaciones durante un año al contratar al primer empleado; «tarifa cero» para nuevos autónomos.","Sense cotitzacions durant un any en contractar el primer empleat; «tarifa zero» per a nous autònoms.","No contributions for a year when hiring a first employee; a \"zero rate\" for new self-employed workers."]],
+ sanidad:[["P","Al menos 4.500 médicos más en Atención Primaria y plan urgente contra las listas de espera.","Almenys 4.500 metges més a l'Atenció Primària i pla urgent contra les llistes d'espera.","At least 4,500 more primary-care doctors and an urgent waiting-list plan."],
+  ["P","Plan Nacional de Salud Mental 2027-2037 y ley nacional de cuidados paliativos.","Pla Nacional de Salut Mental 2027-2037 i llei nacional de cures pal·liatives.","A 2027-2037 National Mental Health Plan and a national palliative-care law."]],
+ educacion:[["P","Sustituir la LOMLOE y establecer una PAU única en toda España.","Substituir la LOMLOE i establir una PAU única a tot Espanya.","Replace the LOMLOE education law and set a single university entrance exam nationwide."],
+  ["P","Escuela de 0 a 3 años gratuita, con el Estado financiando la mitad de cada plaza; redes sociales prohibidas a menores de 14.","Escola de 0 a 3 anys gratuïta, amb l'Estat finançant la meitat de cada plaça; xarxes socials prohibides a menors de 14.","Free 0–3 schooling with the State funding half of each place; social media banned for under-14s."]],
+ energia:[["P","Prorrogar la vida de las nucleares, entre ellas Ascó y Vandellòs, con el visto bueno del Consejo de Seguridad Nuclear.","Prorrogar la vida de les nuclears, entre les quals Ascó i Vandellòs, amb el vistiplau del Consell de Seguretat Nuclear.","Extend the life of nuclear plants, including Ascó and Vandellòs, subject to the nuclear safety regulator's approval."],
+  ["P","Suprimir el impuesto a la generación eléctrica y Pacto Nacional del Agua con hasta 40.000 millones hasta 2030.","Suprimir l'impost a la generació elèctrica i Pacte Nacional de l'Aigua amb fins a 40.000 milions fins al 2030.","Scrap the electricity-generation tax and a National Water Pact worth up to €40bn to 2030."]],
+ territorial:[["P","Conferencia de Presidentes para una nueva financiación autonómica con fondo de nivelación; ninguna comunidad saldría del régimen común.","Conferència de Presidents per a un nou finançament autonòmic amb fons d'anivellament; cap comunitat sortiria del règim comú.","A Conference of Presidents on new regional financing with a levelling fund; no region would leave the common system."],
+  ["P","Derogar la Ley de Amnistía; derecho a estudiar en español en todas las etapas y plan de presencia del Estado con atención a Cataluña, País Vasco y Navarra.","Derogar la Llei d'amnistia; dret a estudiar en espanyol a totes les etapes i pla de presència de l'Estat amb atenció a Catalunya, País Basc i Navarra.","Repeal the Amnesty Law; the right to study in Spanish at every stage and a State-presence plan focused on Catalonia, the Basque Country and Navarre."]],
+ infra:[["P","Más de 300.000 millones en infraestructuras en 15 años, junto al sector privado.","Més de 300.000 milions en infraestructures en 15 anys, juntament amb el sector privat.","More than €300bn for infrastructure over 15 years, alongside the private sector."],
+  ["D","García Albiol propuso en el debate de PIMEC 20.000 millones el primer año para revisar y mantener las vías.","García Albiol va proposar al debat de PIMEC 20.000 milions el primer any per revisar i mantenir les vies.","At the PIMEC debate García Albiol proposed €20bn in the first year for track inspection and maintenance."]],
+ inmigracion:[["P","Identificar en siete días a quien cruce ilegalmente la frontera para agilizar su devolución; fin de las regularizaciones masivas.","Identificar en set dies qui creui il·legalment la frontera per agilitzar-ne la devolució; fi de les regularitzacions massives.","Identify within seven days anyone who crosses illegally, to speed up returns; an end to mass regularisations."],
+  ["P","Cupos anuales por sectores y países y visado por puntos; nueva ley de nacionalidad con nivel B2 de español.","Quotes anuals per sectors i països i visat per punts; nova llei de nacionalitat amb nivell B2 d'espanyol.","Annual quotas by sector and country and a points-based visa; a new nationality law requiring B2 Spanish."]],
+ seguridad:[["P","Ley contra la multirreincidencia con juicios rápidos y prisión permanente revisable ampliada.","Llei contra la multireincidència amb judicis ràpids i presó permanent revisable ampliada.","A repeat-offender law with fast-track trials and wider reviewable life imprisonment."],
+  ["P","Escáneres de contenedores en puertos como el de Barcelona; policías y guardias civiles como profesión de riesgo.","Escàners de contenidors a ports com el de Barcelona; policies i guàrdies civils com a professió de risc.","Container scanners at ports including Barcelona; police and Guardia Civil classed as a risk profession."]],
+ justicia:[["P","Fiscal general con mandato único de cinco años; los jueces eligen a los doce vocales judiciales del CGPJ.","Fiscal general amb mandat únic de cinc anys; els jutges trien els dotze vocals judicials del CGPJ.","An attorney general with a single five-year term; judges elect the twelve judicial members of the judiciary council."],
+  ["P","Indultos prohibidos por corrupción; una segunda prórroga presupuestaria consecutiva obligaría a disolver las Cortes.","Indults prohibits per corrupció; una segona pròrroga pressupostària consecutiva obligaria a dissoldre les Corts.","No pardons for corruption; a second consecutive budget rollover would force parliament's dissolution."]],
+ pensiones:[["P","Revalorización anual con el IPC y reconstruir el Pacto de Toledo.","Revaloració anual amb l'IPC i reconstruir el Pacte de Toledo.","Annual inflation-linked rises and a rebuilt Toledo Pact."],
+  ["P","Blindar por ley la caja única de la Seguridad Social e incentivar la jubilación activa.","Blindar per llei la caixa única de la Seguretat Social i incentivar la jubilació activa.","Protect the single Social Security fund by law and incentivise working past retirement age."]],
+ igualdad:[["P","Revisar la Ley Trans y eliminar la libre autodeterminación registral del sexo.","Revisar la Llei trans i eliminar la lliure autodeterminació registral del sexe.","Review the Trans Law and end free self-determination of registered sex."],
+  ["P","Ley integral contra la trata; el Estado aportaría el 50 % del coste público de la dependencia; permisos por nacimiento ampliados.","Llei integral contra el tràfic de persones; l'Estat aportaria el 50 % del cost públic de la dependència; permisos per naixement ampliats.","A comprehensive anti-trafficking law; the State would cover 50% of public long-term-care costs; longer birth leave."]],
+ exterior:[["P","Ley de programación y financiación de la defensa; cumplir los compromisos de la OTAN con aval del Congreso, sin fijar porcentaje del PIB.","Llei de programació i finançament de la defensa; complir els compromisos de l'OTAN amb aval del Congrés, sense fixar percentatge del PIB.","A defence planning and funding law; meet NATO commitments with Congress's backing, without setting a GDP percentage."],
+  ["P","Apoyo político, económico, militar y humanitario a Ucrania; frontera sur como prioridad.","Suport polític, econòmic, militar i humanitari a Ucraïna; frontera sud com a prioritat.","Political, economic, military and humanitarian support for Ukraine; the southern border as a priority."]]
+ }},
+{id:"d21",short:"D21",name:"Democracia para el Siglo 21 (D21)",color:"#f08a24",head:"David Andrés Díaz",nat:"Miriam González Durántez",status:"none",q:"Democracia 21 Miriam González",
+ doc:["Sin programa completo. Su único documento programático es «España Limpia», sobre regeneración institucional; el resto son enunciados y posiciones públicas.","Sense programa complet. El seu únic document programàtic és «España Limpia», sobre regeneració institucional; la resta són enunciats i posicions públiques.","No full programme. Its only policy document is \"España Limpia\", on institutional reform; the rest are headline statements and public positions."],
+ about:["Coalición de Democracia 21, Ciudadanos y UCIN. Solo se presenta en Madrid y Barcelona.","Coalició de Democracia 21, Ciudadanos i UCIN. Només es presenta a Madrid i Barcelona.","Coalition of Democracia 21, Ciudadanos and UCIN. It runs only in Madrid and Barcelona."],
+ links:[[AGG,"https://www.politicaelectoral.com/es/espana/generales-2026/nacional/democracia-21"]],
+ props:{
+ vivienda:[["D","Eliminar los impuestos ligados a la vivienda para menores de 35 años mientras no haya alquileres asequibles.","Eliminar els impostos lligats a l'habitatge per a menors de 35 anys mentre no hi hagi lloguers assequibles.","Scrap housing-related taxes for under-35s until affordable rents are available."],
+  ["D","Plan Nacional de Construcción de Barrios pactado entre partidos y 10.000 millones de fondos europeos sin ejecutar para vivienda asequible.","Pla Nacional de Construcció de Barris pactat entre partits i 10.000 milions de fons europeus sense executar per a habitatge assequible.","A cross-party National Neighbourhood-Building Plan and €10bn of unspent EU funds for affordable housing."]],
+ economia:[["D","Aliviar la presión fiscal sin recortar servicios públicos y eliminar trabas a pymes y autónomos, sin cifras concretas.","Alleujar la pressió fiscal sense retallar serveis públics i eliminar traves a pimes i autònoms, sense xifres concretes.","Ease the tax burden without cutting public services and remove red tape for small firms and the self-employed, with no figures given."]],
+ educacion:[["D","Grados universitarios más flexibles y con más prácticas.","Graus universitaris més flexibles i amb més pràctiques.","More flexible university degrees with more work placements."]],
+ inmigracion:[["D","Considera la inmigración un activo y pide reglas claras de entrada y salida, sin detallar medidas.","Considera la immigració un actiu i demana regles clares d'entrada i sortida, sense detallar mesures.","Sees immigration as an asset and wants clear entry and exit rules, without detailed measures."]],
+ justicia:[["D","Reducir un 90 % los asesores, suprimir los aforamientos y limitar los cargos a dos mandatos.","Reduir un 90 % els assessors, suprimir els aforaments i limitar els càrrecs a dos mandats.","Cut advisers by 90%, abolish special judicial immunity and limit office-holders to two terms."],
+  ["D","Corrupción imprescriptible e inhabilitación de por vida; suspender el sueldo del Gobierno si no presenta Presupuestos.","Corrupció imprescriptible i inhabilitació de per vida; suspendre el sou del Govern si no presenta Pressupostos.","No time limit on corruption offences and lifetime bans from office; suspend ministers' pay if no budget is presented."]],
+ exterior:[["D","Se define como europeísta; sin posición publicada sobre defensa, Ucrania o Gaza.","Es defineix com a europeista; sense posició publicada sobre defensa, Ucraïna o Gaza.","Describes itself as pro-European; no published position on defence, Ukraine or Gaza."]]
+ }},
+{id:"alhora",short:"Alhora",name:"Alhora",color:"#111111",head:"Jordi Graupera",nat:"",status:"none",q:"Alhora Graupera",
+ doc:["Sin programa por temas: se presenta con un único punto. Campaña «Fora Espanya».","Sense programa per temes: es presenta amb un únic punt. Campanya «Fora Espanya».","No topic-by-topic programme: it runs on a single point. Campaign: \"Fora Espanya\"."],
+ about:["Partido independentista fundado en 2024. Se presenta en las cuatro demarcaciones catalanas tras reunir los avales exigidos a partidos sin representación.","Partit independentista fundat el 2024. Es presenta a les quatre demarcacions catalanes després de reunir els avals exigits a partits sense representació.","Pro-independence party founded in 2024. Running in all four Catalan constituencies after gathering the signatures required of parties without seats."],
+ links:[[WEB,"https://alhora.cat/"],[["Entrevista en Nació","Entrevista a Nació","Interview in Nació"],"https://naciodigital.cat/politica/jordi-graupera-alhora-anar-congres-trencar-acords-pacificacio-junts-erc.html"]],
+ props:{
+ territorial:[["D","Un solo objetivo en el Congreso: sacar al Estado español de Cataluña.","Un sol objectiu al Congrés: fer fora l'estat espanyol de Catalunya.","A single aim in Congress: remove the Spanish state from Catalonia."],
+  ["D","No investir ningún gobierno español y romper los acuerdos de «pacificación» de Junts y ERC.","No investir cap govern espanyol i trencar els acords de «pacificació» de Junts i ERC.","Back no Spanish government and break the \"pacification\" agreements of Junts and ERC."]],
+ infra:[["D","Abrió la campaña en la estación de Sants con el mensaje «fora Renfe», por el estado de Rodalies.","Va obrir la campanya a l'estació de Sants amb el missatge «fora Renfe», per l'estat de Rodalies.","Opened its campaign at Sants station with the message \"fora Renfe\", over the state of Rodalies."]]
+ }}
+);
+
+var Y="https://www.youtube.com/watch?v=";
+UI.vid.direct=["Vídeos directos","Vídeos directes","Direct videos"];
+UI.vid.nodirect=["No se han encontrado vídeos directos de esta campaña; usa los botones de búsqueda.","No s'han trobat vídeos directes d'aquesta campanya; fes servir els botons de cerca.","No direct videos from this campaign were found; use the search buttons."];
+UI.vid.hexp=["Explicadores y comparativas","Explicadors i comparatives","Explainers and comparisons"];
+UI.vid.expnote=["Vídeos de terceros que explican las propuestas con gráficos o dibujos. No son de los partidos ni de esta guía: cada autor responde de su contenido, y varios se publicaron antes de que salieran los programas.","Vídeos de tercers que expliquen les propostes amb gràfics o dibuixos. No són dels partits ni d'aquesta guia: cada autor respon del seu contingut, i diversos es van publicar abans que sortissin els programes.","Third-party videos explaining proposals with graphics or drawings. They are not from the parties or this guide: each author answers for their content, and several were published before the programmes came out."];
+UI.vid.hdeb=["Debates","Debats","Debates"];
+UI.vid.hparty=["Vídeos por candidatura","Vídeos per candidatura","Videos by candidature"];
+UI.vid.titles=["Los títulos se muestran tal como se publicaron.","Els títols es mostren tal com es van publicar.","Titles are shown as published."];
+var KIND={L:["Programa","Programa","Programme"],M:["Mitin","Míting","Rally"],I:["Entrevista","Entrevista","Interview"],N:["Noticia","Notícia","News clip"],E:["Explicador de terceros","Explicador de tercers","Third-party explainer"],C:["Canal","Canal","Channel"],D:["Debate","Debat","Debate"],H:["Archivo","Arxiu","Archive"]};
+var VIDS={
+psc:[["M","Mitin del PSOE en Sevilla, inicio de campaña",Y+"0Erpf9bTL_w"],
+ ["M","Directo: acto de Pedro Sánchez con el primer secretario (señal del PSOE)","https://www.youtube.com/live/7y_kNkYc2vY"],
+ ["M","Directo: acto de precampaña del PSOE en Bilbao (El País)","https://www.youtube.com/live/zuxsIgSWGfw"],
+ ["M","Directo: mitin de Sánchez en Fuenlabrada tras el Comité Federal",Y+"Ei80XYA6Asc"],
+ ["M","Sánchez participa en un mitin tras ser proclamado candidato",Y+"-N1EUzbNJOA"],
+ ["N","El PSOE valora el adelanto electoral al 29N",Y+"3JarR6XiDDg"]],
+junts:[["I","Cómo Junts ha condicionado al Gobierno de Sánchez (Nogueras en El Sentido de la Birra)",Y+"0JkpMLOEmVA"],
+ ["N","¿Por qué Junts votó contra el decreto de las pensiones? (short)","https://www.youtube.com/shorts/OGPGiNcWrh4"],
+ ["N","Junts: «Hacen promesas que suenan bien pero la gente merece la verdad» (Congreso)",Y+"opMYWRS2kZ4"],
+ ["N","Nogueras, tras la convocatoria de las elecciones",Y+"xREjmC68HVg"]],
+erc:[["M","Irene Montero y Gabriel Rufián celebran un acto de precampaña (directo, elDiario.es)",Y+"bjAx48dGZqw"],
+ ["I","Gabriel Rufián e Irene Montero, con Broncano en La Revuelta",Y+"bqFtaYNEZjY"],
+ ["N","Rufián será el candidato por ERC al Congreso",Y+"e1g2LU9Z7YE"],
+ ["N","Gabriel Rufián encabezará la lista de ERC al Congreso",Y+"XSbhYeMF7ks"]],
+fo:[["C","Canal de Roberto Vaquero, presidente del Frente Obrero","https://www.youtube.com/@robertovaquero_"],
+ ["C","Vaquero Podcast","https://www.youtube.com/@vaqueropodcast"]],
+salf:[],pctc:[],
+vox:[["M","En directo: acto central de inicio de campaña de Vox en la plaza de Colón",Y+"6SSK2PjeA1s"],
+ ["M","Abascal, discurso completo",Y+"z-EDqR8QM88"],
+ ["M","Directo: Abascal presenta a los candidatos en Talavera de la Reina",Y+"1wyvnLdYYsM"],
+ ["N","Vox afirma que con él en el Gobierno «las pensiones se pagarán»",Y+"7Y1YQyQt01I"],
+ ["E","¿Qué pasaría si gobernara Vox? 12 medidas clave",Y+"OUOV-SjruHM"],
+ ["E","Todo lo que haría Vox si gobierna: su programa, punto por punto",Y+"3rLCPv8d2SM"],
+ ["E","Si votas a Vox, esto es lo que cambia para ti (29-N)",Y+"WsdmqmJoLEE"]],
+comuns:[["M","Directo: arranque de campaña de Frente Amplio en Madrid (12 nov)",Y+"pxOboqB9TTI"],
+ ["M","Directo: presentación del Frente Amplio en Sant Andreu, Barcelona","https://www.youtube.com/live/4mDGMO5Viww"],
+ ["N","Frente Amplio propone una ley para expropiar viviendas a grandes fondos de inversión",Y+"6eeUB8vXQKM"],
+ ["N","Colau propone un impuesto a ultrarricos para elevar la tributación a la banca",Y+"mtCmNGRrSNw"],
+ ["N","Frente Amplio hace de «Un voto como una casa» su lema para el 29-N",Y+"RRQf5Cx_ysM"],
+ ["I","Ada Colau responde las preguntas clásicas (La Revuelta, short)","https://www.youtube.com/shorts/aE0n-MIdQRk"],
+ ["N","Frente Amplio designa a Ada Colau como cabeza de lista",Y+"iVVXmlvlQ7Q"]],
+pp:[["L","Directo: Feijóo presenta el programa electoral para el 29-N",Y+"VUuh0hMyUQo"],
+ ["L","Intervención completa: Feijóo presenta su programa de «Reconstrucción Nacional»",Y+"bdKvlD7HYTA"],
+ ["N","Feijóo promete sustituir el IMV por una Renta de Activación",Y+"e73IBf9Ilg8"],
+ ["N","Feijóo promete una ley del concebido no nacido y defender la prioridad nacional",Y+"57VfaPjgIx8"],
+ ["M","Directo: primer gran acto de precampaña del PP en Cataluña",Y+"GvjJpWOqKoM"],
+ ["N","Feijóo promete una nueva ley antiocupaciones de la mano de Albiol",Y+"z3qQWUQEhQg"],
+ ["N","Albiol quiere «poner cara y voz» en el Congreso a las prioridades de los catalanes",Y+"G_O7wNBZLhU"],
+ ["E","Hemos leído el programa del PP: esto cambia en tu dinero",Y+"cv_ysF91rZo"]],
+d21:[["L","Miriam González presenta Democracia 21",Y+"i74wvbCFTxA"],
+ ["L","Directo: acto de presentación de Democracia 21",Y+"U6t9LAju9nk"],
+ ["I","Aimar Bretos entrevista a Miriam González (Cadena SER)",Y+"BCvb4sM7pO0"],
+ ["N","Democracia 21 concurrirá con Ciudadanos",Y+"09AJLanPjTs"],
+ ["N","González propone bajar impuestos de vivienda a menores de 35 años (short)","https://www.youtube.com/shorts/9NyoEzI7rNg"],
+ ["N","Miriam González: «El país necesita un cambio»",Y+"C1cQ_AfJz48"]],
+alhora:[["H","«Arrels i Futur»: conferència completa de l'acte fundacional d'Alhora (2024)",Y+"y01D6pNZKbs"],
+ ["H","Entrevista de Carla Turró a Clara Ponsatí i Jordi Graupera (2024)",Y+"B_pVbtO619s"]]
+};
+var EXPL=[
+ ["¿A quién votar el 29N? Los 9 partidos explicados (con dibujos)",Y+"rrQXvsSJecs","YouTube"],
+ ["Elecciones 29-N: qué propone cada partido (sin opiniones)",Y+"VRfzCMXMVZ0","YouTube"],
+ ["A quién votar el 29N: lo que propone cada partido, uno al lado del otro",Y+"XcJ3VTQ3Seo","YouTube"],
+ ["Elecciones en España: ¿qué propuesta tiene cada partido?",Y+"-2Y5E2t5FK8","YouTube"],
+ ["Tu pensión en 2027 según quién gane",Y+"_oW2awi41gk","YouTube"],
+ ["29N: guía para entender las elecciones en España (sistema electoral)",Y+"qGGJmlT1Crs","YouTube"],
+ ["Al Dedillo: lo que propone cada partido, en un minuto","https://www.youtube.com/@aldedillo.oficial","YouTube · canal"],
+ ["En Plata: explicadores animados de los programas (la cuenta del vídeo que enviaste)","https://www.tiktok.com/@enplata.tv","TikTok · @enplata.tv"],
+ ["En Plata: «Elecciones En Plata», qué propone cada partido","https://www.tiktok.com/@enplata.tv/video/7704030228011601185","TikTok"],
+ ["Elecciones 29N: lista de entrevistas a los principales partidos","https://www.youtube.com/playlist?list=PLRLstML4qYfA","YouTube · playlist"]
+];
+var DEB=[
+ ["Directo: debate de EL PAÍS y SER Catalunya con los principales candidatos catalanes",Y+"eCfGsfxpXTg","YouTube"],
+ ["Debate de PIMEC con los candidatos por Barcelona (crónica)","https://www.3cat.cat/3catinfo/lhabitatge-i-rodalies-centren-el-debat-de-candidats-del-29n-de-la-pimec-amb-labsencia-de-rufian/noticia/3438734/","3CatInfo"],
+ ["Cara a cara Sánchez–Feijóo, 19 nov (anuncio)","https://www.eldiario.es/vertele/noticias/debate-cara-a-cara-sanchez-feijoo-sera-jueves-19-noviembre-academia-tv_1_13662406.html","elDiario.es"],
+ ["Debate a ocho en RTVE, 23 nov a las 22:00 (anuncio)","https://www.lavozdelsur.es/vida/pantallazos/rtve-pone-fecha-al-debate-del-29n-y-junts-se-incorpora-tras-rechazar-la-invitacion-estos-son-los-ochos-portavoces.html","La Voz del Sur"]
+];
+SOURCES.push({n:["Vídeos y comparativas añadidos","Vídeos i comparatives afegits","Videos and comparisons added"],i:[
+ ["Demócrata · Comparativa de los programas de PP y Vox","https://www.democrata.es/elecciones-generales-espana/comparativa-programas-electorales-derecha-proponen-pp-vox-29n/"],
+ ["Moncloa.com · El programa del PP","https://www.moncloa.com/2026/11/10/programa-electoral-pp-29n-eutanasia-3465466/"],
+ ["65 y Más · Comparador: pensiones y dependencia","https://www.65ymas.com/sociedad/politica/comparador-programas-electorales-29-n-pensiones-dependencia-centran-medidas-mayores_87452_102.html"],
+ ["Público · La izquierda alternativa catalana en las generales","https://www.publico.es/politica/partidos/izquierda-alternativa-catalana-generales-rol-residual-2004-tocar-techo-ciclo-15m-proces.html"],
+ ["YouTube · Feijóo presenta el programa del PP",Y+"VUuh0hMyUQo"],
+ ["YouTube · Debate EL PAÍS / SER Catalunya",Y+"eCfGsfxpXTg"],
+ ["YouTube · Arranque de campaña de Frente Amplio",Y+"pxOboqB9TTI"],
+ ["YouTube · Inicio de campaña de Vox",Y+"6SSK2PjeA1s"],
+ ["YouTube · Mitin del PSOE en Sevilla",Y+"0Erpf9bTL_w"]]});
+
+UI.vid.play=["Ver vídeo resumen","Veure vídeo resum","Watch summary video"];
+UI.vid.own=["Un vídeo breve por candidatura y tema, hecho para esta guía a partir de las mismas propuestas y etiquetas de origen que ves en las fichas. Se reproduce en el idioma seleccionado.","Un vídeo breu per candidatura i tema, fet per a aquesta guia a partir de les mateixes propostes i etiquetes d'origen que veus a les fitxes. Es reprodueix en l'idioma seleccionat.","A short video per candidature and topic, made for this guide from the same proposals and source tags shown in the profiles. It plays in the selected language."];
+UI.vid.novid=["Sin vídeos: no hay propuestas localizadas.","Sense vídeos: no hi ha propostes localitzades.","No videos: no proposals were found."];
+UI.vid.silent=["Los vídeos no tienen sonido: todo el contenido está en pantalla.","Els vídeos no tenen so: tot el contingut és en pantalla.","The videos have no sound: all content is on screen."];
+UI.vid.exth=["Vídeos externos","Vídeos externs","External videos"];
+UI.vid.extnote=["Enlaces a vídeos de partidos, medios y terceros. Se seleccionaron por título y descripción; no se ha revisado su transcripción, así que no se usan como fuente de ninguna propuesta de la guía.","Enllaços a vídeos de partits, mitjans i tercers. Es van seleccionar per títol i descripció; no se n'ha revisat la transcripció, de manera que no es fan servir com a font de cap proposta de la guia.","Links to videos from parties, media and third parties. They were selected by title and description; their transcripts have not been reviewed, so they are not used as a source for any proposal in this guide."];
+
+UI.vid.silent=["Los vídeos llevan narración con voz sintética, y todo el contenido está también en pantalla.","Els vídeos porten narració amb veu sintètica, i tot el contingut és també en pantalla.","The videos are narrated with a synthetic voice, and all content is also on screen."];
+
+UI.chk={h:["Verificación de lo que dicen los candidatos","Verificació del que diuen els candidats","Fact-checking what candidates say"],
+ lede:["Herramientas externas que contrastan declaraciones con datos. Esta guía no reproduce sus veredictos ni responde de ellos.","Eines externes que contrasten declaracions amb dades. Aquesta guia no en reprodueix els veredictes ni en respon.","External tools that check statements against data. This guide does not reproduce their verdicts or vouch for them."]};
+var CHECK=[
+ {n:["Verificador de Felina Studio","Verificador de Felina Studio","Felina Studio's Verifier"],x:["Comprueba, minuto a minuto, las entrevistas de The Wild Project a Ada Colau, Alberto Núñez Feijóo y Pedro Sánchez, con sus fuentes. Según su propia metodología, la verificación la hacen de principio a fin dos inteligencias artificiales (Claude y ChatGPT), sin revisión humana descrita. Solo cubre a tres candidatos.","Comprova, minut a minut, les entrevistes de The Wild Project a Ada Colau, Alberto Núñez Feijóo i Pedro Sánchez, amb les fonts. Segons la seva pròpia metodologia, la verificació la fan de principi a fi dues intel·ligències artificials (Claude i ChatGPT), sense revisió humana descrita. Només cobreix tres candidats.","Checks, minute by minute, The Wild Project interviews with Ada Colau, Alberto Núñez Feijóo and Pedro Sánchez, with sources. By its own methodology, verification is done end to end by two AI systems (Claude and ChatGPT), with no human review described. It covers only three candidates."],s:"felinastudio.es",u:"https://felinastudio.es/verificador-elecciones"},
+ {n:["Cómo verifica Felina Studio","Com verifica Felina Studio","How Felina Studio verifies"],x:["Su reglamento: qué se mide, la escala de cuatro veredictos, cómo se resuelven los desacuerdos entre las dos IA y la lista de fuentes.","El seu reglament: què es mesura, l'escala de quatre veredictes, com es resolen els desacords entre les dues IA i la llista de fonts.","Its rulebook: what is measured, the four-verdict scale, how disagreements between the two AIs are settled, and the source list."],s:"felinastudio.es",u:"https://felinastudio.es/verificador-elecciones/metodo"},
+ {n:["Comprobado 29N","Comprobado 29N","Comprobado 29N"],x:["Alianza de verificadores y medios para la campaña: EFE Verifica, Maldita.es, Newtral, Verificat, RTVE Verifica, AFP e Infoveritas.","Aliança de verificadors i mitjans per a la campanya: EFE Verifica, Maldita.es, Newtral, Verificat, RTVE Verifica, AFP i Infoveritas.","Alliance of fact-checkers and media for the campaign: EFE Verifica, Maldita.es, Newtral, Verificat, RTVE Verifica, AFP and Infoveritas."],s:"info-veritas.com",u:"https://info-veritas.com/explicativos-comprobado-29n-reune-medidos-verificadores-combatir-desinformacion-electoral/"},
+ {n:["Maldita.es","Maldita.es","Maldita.es"],x:["Verificador periodístico.","Verificador periodístic.","Journalistic fact-checker."],s:"maldita.es",u:"https://maldita.es/"},
+ {n:["Newtral","Newtral","Newtral"],x:["Verificador periodístico.","Verificador periodístic.","Journalistic fact-checker."],s:"newtral.es",u:"https://www.newtral.es/"},
+ {n:["Verificat","Verificat","Verificat"],x:["Verificador periodístico catalán.","Verificador periodístic català.","Catalan journalistic fact-checker."],s:"verificat.cat",u:"https://www.verificat.cat/"}
+];
+
+UI.datos.ban=["Las encuestas no se muestran entre el 24 y el 29 de noviembre: la ley electoral prohíbe publicarlas o reproducirlas en los cinco días anteriores a la votación.","Les enquestes no es mostren entre el 24 i el 29 de novembre: la llei electoral prohibeix publicar-les o reproduir-les en els cinc dies anteriors a la votació.","Polls are not shown between 24 and 29 November: electoral law bans publishing or reproducing them in the five days before the vote."];
+
+UI.nav["como-votar"]=["Cómo se vota","Com es vota","How voting works"];
+UI.how={h:["Qué votas el 29N y cómo funciona","Què votes el 29N i com funciona","What you vote on 29N and how it works"],
+ lede:["El 29 de noviembre eliges las dos cámaras de las Cortes Generales, con dos votos distintos e independientes. Aquí está cómo funciona cada uno para quien vota en Barcelona.","El 29 de novembre tries les dues cambres de les Corts Generals, amb dos vots diferents i independents. Aquí tens com funciona cadascun per a qui vota a Barcelona.","On 29 November you elect both chambers of Spain's parliament, with two separate, independent votes. Here is how each works for someone voting in Barcelona."],
+ ex:["Ejemplo inventado del reparto D'Hondt: 4 escaños","Exemple inventat del repartiment D'Hondt: 4 escons","Made-up example of D'Hondt allocation: 4 seats"],
+ exnote:["Se dividen los votos de cada candidatura entre 1, 2, 3 y 4, y los escaños van a los cuatro cocientes más altos (marcados con ●). Resultado: A obtiene 3, B obtiene 1 y C ninguno.","Es divideixen els vots de cada candidatura entre 1, 2, 3 i 4, i els escons van als quatre quocients més alts (marcats amb ●). Resultat: A n'obté 3, B n'obté 1 i C cap.","Each candidature's votes are divided by 1, 2, 3 and 4, and seats go to the four highest quotients (marked ●). Result: A wins 3, B wins 1 and C none."],
+ votes:["Votos","Vots","Votes"],party:["Candidatura","Candidatura","Candidature"],src:["Fuentes oficiales","Fonts oficials","Official sources"]};
+var BALLOTS=[
+ {sen:0,t:["Congreso de los Diputados","Congrés dels Diputats","Congress of Deputies"],k:["Papeleta blanca","Papereta blanca","White ballot"],
+  f:[["350 diputados en toda España; Barcelona elige 32.","350 diputats a tot Espanya; Barcelona en tria 32.","350 deputies nationwide; Barcelona elects 32."],
+     ["Votas a un partido: coges su papeleta y la metes en el sobre, sin marcar nada.","Votes un partit: agafes la seva papereta i la poses al sobre, sense marcar res.","You vote for a party: take its ballot and put it in the envelope, without marking anything."],
+     ["La lista es cerrada y bloqueada: no puedes elegir personas ni cambiar el orden.","La llista és tancada i bloquejada: no pots triar persones ni canviar l'ordre.","The list is closed and fixed: you cannot pick individuals or change the order."],
+     ["Los escaños se reparten en proporción a los votos de cada provincia.","Els escons es reparteixen en proporció als vots de cada província.","Seats are shared out in proportion to the votes in each province."]]},
+ {sen:1,t:["Senado","Senat","Senate"],k:["Papeleta sepia","Papereta sèpia","Sepia ballot"],
+  f:[["266 senadores: 208 elegidos en las urnas y 58 designados por los parlamentos autonómicos. Barcelona elige 4.","266 senadors: 208 elegits a les urnes i 58 designats pels parlaments autonòmics. Barcelona en tria 4.","266 senators: 208 directly elected and 58 appointed by regional parliaments. Barcelona elects 4."],
+     ["Votas a personas: una sola papeleta con todos los candidatos, y marcas con una cruz hasta 3.","Votes persones: una sola papereta amb tots els candidats, i marques amb una creu fins a 3.","You vote for people: a single ballot lists all candidates, and you mark up to 3 with a cross."],
+     ["Pueden ser de partidos distintos, y puedes marcar solo 1 o 2.","Poden ser de partits diferents, i pots marcar-ne només 1 o 2.","They can be from different parties, and you may mark just 1 or 2."],
+     ["Ganan los cuatro candidatos con más votos individuales.","Guanyen els quatre candidats amb més vots individuals.","The four candidates with the most individual votes win."]]}
+];
+var HOW=[
+ {h:["Dos votos independientes","Dos vots independents","Two independent votes"],p:[
+  ["En la mesa entregas dos sobres, uno para cada cámara. Lo que votes en uno no condiciona el otro: puedes elegir un partido para el Congreso y candidatos de otros partidos para el Senado.","A la mesa lliures dos sobres, un per a cada cambra. El que votis en un no condiciona l'altre: pots triar un partit per al Congrés i candidats d'altres partits per al Senat.","At the polling table you hand in two envelopes, one per chamber. One vote does not constrain the other: you can choose one party for Congress and candidates from other parties for the Senate."],
+  ["También puedes votar solo en una de las dos elecciones.","També pots votar només en una de les dues eleccions.","You may also vote in just one of the two elections."]]},
+ {h:["Para qué sirve cada cámara","Per a què serveix cada cambra","What each chamber does"],p:[
+  ["El Congreso elige al presidente del Gobierno en la investidura y puede hacerlo caer. Tramita primero las leyes y los presupuestos y tiene la última palabra sobre las enmiendas y vetos del Senado.","El Congrés tria el president del Govern a la investidura i el pot fer caure. Tramita primer les lleis i els pressupostos i té l'última paraula sobre les esmenes i vetos del Senat.","Congress elects the prime minister at the investiture vote and can bring the government down. It handles laws and budgets first and has the final say over Senate amendments and vetoes."],
+  ["Para la investidura hace falta mayoría absoluta (176 de 350) en la primera votación, o más síes que noes en la segunda, 48 horas después.","Per a la investidura cal majoria absoluta (176 de 350) a la primera votació, o més sís que nos a la segona, 48 hores després.","Investiture needs an absolute majority (176 of 350) in the first vote, or more yes than no votes in the second, 48 hours later."],
+  ["El Senado es la cámara territorial: revisa las leyes que le llegan del Congreso, puede enmendarlas o vetarlas, y debe autorizar medidas excepcionales sobre una comunidad autónoma (artículo 155). No participa en la elección del presidente.","El Senat és la cambra territorial: revisa les lleis que li arriben del Congrés, les pot esmenar o vetar, i ha d'autoritzar mesures excepcionals sobre una comunitat autònoma (article 155). No participa en l'elecció del president.","The Senate is the territorial chamber: it reviews laws sent from Congress, may amend or veto them, and must authorise exceptional measures over a region (Article 155). It plays no part in electing the prime minister."]]},
+ {h:["Cómo se reparten los 32 escaños del Congreso por Barcelona","Com es reparteixen els 32 escons del Congrés per Barcelona","How Barcelona's 32 Congress seats are shared out"],ex:1,p:[
+  ["Cada provincia es una circunscripción: tu voto solo compite con los de la provincia de Barcelona.","Cada província és una circumscripció: el teu vot només competeix amb els de la província de Barcelona.","Each province is a constituency: your vote only competes with others cast in the province of Barcelona."],
+  ["Solo entran en el reparto las candidaturas con al menos el 3 % de los votos válidos de la provincia.","Només entren en el repartiment les candidatures amb almenys el 3 % dels vots vàlids de la província.","Only candidatures with at least 3% of the province's valid votes take part in the allocation."],
+  ["Los escaños se asignan con el método D'Hondt, que favorece ligeramente a las candidaturas más votadas. Salen elegidas las personas de cada lista por orden, empezando por la primera.","Els escons s'assignen amb el mètode D'Hondt, que afavoreix lleugerament les candidatures més votades. Surten elegides les persones de cada llista per ordre, començant per la primera.","Seats are assigned by the D'Hondt method, which slightly favours the most-voted candidatures. People on each list are elected in order, starting from the top."]]},
+ {h:["Cómo se eligen los 4 senadores por Barcelona","Com es trien els 4 senadors per Barcelona","How Barcelona's 4 senators are chosen"],p:[
+  ["Cada partido presenta hasta tres candidatos. En la papeleta sepia aparecen todos; pon una cruz en la casilla de los que elijas, hasta tres.","Cada partit presenta fins a tres candidats. A la papereta sèpia hi apareixen tots; posa una creu a la casella dels que triïs, fins a tres.","Each party fields up to three candidates. All appear on the sepia ballot; put a cross in the box of those you choose, up to three."],
+  ["Se cuentan los votos de cada persona, no de cada partido, y obtienen escaño los cuatro más votados.","Es compten els vots de cada persona, no de cada partit, i obtenen escó els quatre més votats.","Votes are counted per person, not per party, and the four most-voted candidates win a seat."],
+  ["Como cada votante marca tres y hay cuatro escaños, lo habitual es que el partido más votado se lleve tres y el segundo, uno. En 2023 fueron tres para el PSC y uno para ERC.","Com que cada votant en marca tres i hi ha quatre escons, l'habitual és que el partit més votat se n'endugui tres i el segon, un. El 2023 van ser tres per al PSC i un per a ERC.","Because each voter marks three and there are four seats, the most-voted party usually takes three and the runner-up one. In 2023 it was three for PSC and one for ERC."],
+  ["Por eso las listas conjuntas importan más en el Senado que en el Congreso: quedar primero vale mucho más que quedar segundo.","Per això les llistes conjuntes importen més al Senat que al Congrés: quedar primer val molt més que quedar segon.","That is why joint lists matter more for the Senate than for Congress: finishing first is worth far more than finishing second."]]},
+ {h:["Voto válido, en blanco y nulo","Vot vàlid, en blanc i nul","Valid, blank and spoiled votes"],p:[
+  ["En blanco: un sobre vacío para el Congreso, o la papeleta del Senado sin ninguna cruz. Es un voto válido: no va a ningún partido, pero cuenta en el total sobre el que se calcula el 3 %.","En blanc: un sobre buit per al Congrés, o la papereta del Senat sense cap creu. És un vot vàlid: no va a cap partit, però compta en el total sobre el qual es calcula el 3 %.","Blank: an empty envelope for Congress, or the Senate ballot with no cross. It is a valid vote: it goes to no party, but counts in the total used to calculate the 3% threshold."],
+  ["Nulo: papeletas de candidaturas distintas en el mismo sobre, una papeleta del Congreso con nombres tachados, cambiados o reordenados, o más de tres cruces en la del Senado. No cuenta para nada.","Nul: paperetes de candidatures diferents al mateix sobre, una papereta del Congrés amb noms ratllats, canviats o reordenats, o més de tres creus a la del Senat. No compta per a res.","Spoiled: ballots from different candidatures in one envelope, a Congress ballot with names crossed out, changed or reordered, or more than three crosses on the Senate ballot. It counts for nothing."],
+  ["Varias papeletas de la misma candidatura en un sobre cuentan como un solo voto válido.","Diverses paperetes de la mateixa candidatura en un sobre compten com un sol vot vàlid.","Several ballots of the same candidature in one envelope count as a single valid vote."],
+  ["Abstenerse es no votar: no se contabiliza como voto de ningún tipo.","Abstenir-se és no votar: no es comptabilitza com a vot de cap mena.","Abstaining means not voting: it is not counted as a vote of any kind."]]},
+ {h:["El día de la votación","El dia de la votació","On election day"],p:[
+  ["Lleva un documento original con fotografía que te identifique: DNI, pasaporte o permiso de conducir.","Porta un document original amb fotografia que t'identifiqui: DNI, passaport o permís de conduir.","Bring an original photo document that identifies you: national ID card, passport or driving licence."],
+  ["Tu colegio y tu mesa figuran en la tarjeta censal que llega a casa; el horario y la consulta de mesa están en la web oficial del INE, enlazada en la pestaña Agenda.","El teu col·legi i la teva mesa figuren a la targeta censal que arriba a casa; l'horari i la consulta de mesa són al web oficial de l'INE, enllaçat a la pestanya Agenda.","Your polling place and table are on the census card posted to you; opening hours and the table lookup are on the official INE site, linked in the Calendar tab."],
+  ["Puedes llevar las papeletas preparadas de casa (las que envían los partidos sirven) o cogerlas en el colegio y prepararlas en la cabina.","Pots portar les paperetes preparades de casa (les que envien els partits serveixen) o agafar-les al col·legi i preparar-les a la cabina.","You can bring ballots ready from home (those mailed by parties are valid) or pick them up at the polling place and prepare them in the booth."]]},
+ {h:["Y después","I després","What happens next"],p:[
+  ["La noche del 29 se conocen los resultados provisionales. Las nuevas Cortes se constituyen el 23 de diciembre.","La nit del 29 es coneixen els resultats provisionals. Les noves Corts es constitueixen el 23 de desembre.","Provisional results come on the night of the 29th. The new parliament convenes on 23 December."],
+  ["Después el Rey consulta a los grupos y propone un candidato, y el Congreso vota la investidura. Si nadie la supera en los dos meses siguientes a la primera votación, se repiten las elecciones.","Després el Rei consulta els grups i proposa un candidat, i el Congrés vota la investidura. Si ningú la supera en els dos mesos següents a la primera votació, es repeteixen les eleccions.","The King then consults the parties and proposes a candidate, and Congress votes on the investiture. If no one succeeds within two months of the first vote, the election is repeated."]]}
+];
+var HOWSRC=[
+ ["Infoelectoral (Ministerio del Interior) · Elecciones a Cortes Generales","https://infoelectoral.interior.gob.es/es/proceso-electoral/preguntas-frecuentes/tipos-de-elecciones/elecciones-a-cortes-generales/"],
+ ["Infoelectoral · Sistema electoral, método D'Hondt y voto nulo","https://infoelectoral.interior.gob.es/es/proceso-electoral/preguntas-frecuentes/sistema-electoral/"],
+ ["Infoelectoral · El Senado","https://infoelectoral.interior.gob.es/es/proceso-electoral/visitas-virtuales/senado/"],
+ ["BOE · Ley Orgánica 5/1985 del Régimen Electoral General","https://www.boe.es/diario_boe/txt.php?id=BOE-A-1985-11672"],
+ ["BOE · Real Decreto 806/2026 de convocatoria","https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"]
+];
+
+</script>
+<script>
+(function(){
+var L=0;try{var s=localStorage.getItem('g29n-lang');if(s!==null)L=+s||0;}catch(e){}
+var st={party:PARTIES[0].id,topic:TOPICS[0].id,off:{}};
+function t(a){return a?(a[L]||a[0]):'';}
+function esc(x){return String(x).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function P(id){for(var i=0;i<PARTIES.length;i++)if(PARTIES[i].id===id)return PARTIES[i];}
+function T(id){for(var i=0;i<TOPICS.length;i++)if(TOPICS[i].id===id)return TOPICS[i];}
+var ROUTES=['inicio','como-votar','candidaturas','temas','agenda','datos','videos','fuentes'];
+function route(){var h=location.hash.replace('#','');return ROUTES.indexOf(h)>=0?h:'inicio';}
+function pill(p){var c=p.status==='pub'?'pub':(p.status==='pend'?'pend':'no');return '<span class="pill '+c+'">'+esc(t(UI.status[p.status]))+'</span>';}
+function ext(u,label,cls){return '<a class="btn '+(cls||'')+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(label)+'</a>';}
+function yt(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);}
+function props(list){
+  if(!list||!list.length)return '<p class="empty">'+esc(t(UI.none))+'</p>';
+  return '<ul class="props">'+list.map(function(b){return '<li><span class="tag '+b[0]+'" title="'+esc(t(UI.tags[b[0]]))+'">'+b[0]+'</span><span>'+esc(b[1+L]||b[1])+'</span></li>';}).join('')+'</ul>';
+}
+function legend(){return '<div class="legend">'+['P','A','D'].map(function(k){return '<span><span class="tag '+k+'">'+k+'</span>'+esc(t(UI.tags[k]))+'</span>';}).join('')+'</div>';}
+function partyChips(sel,multi){return '<div class="chips" role="group">'+PARTIES.map(function(p){var on=multi?!st.off[p.id]:(p.id===sel);return '<button type="button" class="chip" data-party="'+p.id+'" aria-pressed="'+on+'"><span class="dot" style="background:'+p.color+'"></span>'+esc(p.short)+'</button>';}).join('')+'</div>';}
+function topicChips(){return '<div class="chips" role="group">'+TOPICS.map(function(x){return '<button type="button" class="chip" data-topic="'+x.id+'" aria-pressed="'+(x.id===st.topic)+'">'+esc(t(x.n))+'</button>';}).join('')+'</div>';}
+
+function vlist(a){return '<ul class="src" style="margin-top:8px">'+a.map(function(v){return '<li><span class="pill no" style="margin-right:6px">'+esc(t(KIND[v[0]]))+'</span><a href="'+esc(v[2])+'" target="_blank" rel="noopener">'+esc(v[1])+'</a></li>';}).join('')+'</ul>';}
+function plain(a){return '<ul class="src" style="margin-top:8px">'+a.map(function(v){return '<li><a href="'+esc(v[1])+'" target="_blank" rel="noopener">'+esc(v[0])+'</a> <span style="color:var(--muted)">· '+esc(v[2])+'</span></li>';}).join('')+'</ul>';}
+function vbtn(p,x){if(!(p.props[x.id]||[]).length)return '';return '<div class="links"><button type="button" class="btn solid vb" data-video="'+p.id+'-'+x.id+'">\u25B6 '+esc(t(UI.vid.play))+'</button></div><div class="vslot"></div>';}
+var V={};
+V.inicio=function(){
+  var h='<h2>'+esc(t(UI.home.h))+'</h2><p class="lede">'+esc(t(UI.home.lede))+'</p>';
+  h+='<div class="grid facts">'+FACTS.map(function(f){return '<div class="fact'+(f.sen?' sen':'')+'"><b>'+esc(t(f.v))+'</b><span>'+esc(t(f.l))+'</span></div>';}).join('')+'</div>';
+  h+='<h2 style="margin-top:28px">'+esc(t(UI.home.h2))+'</h2><p class="lede">'+esc(t(UI.home.order))+'</p>';
+  h+='<div class="tablewrap"><table><thead><tr><th>'+esc(t(UI.th.cand))+'</th><th>'+esc(t(UI.th.head))+'</th><th>'+esc(t(UI.th.prog))+'</th><th>'+esc(t(UI.th.doc))+'</th></tr></thead><tbody>';
+  PARTIES.forEach(function(p){h+='<tr><td><span class="dot" style="background:'+p.color+'"></span><a href="#candidaturas" data-go="'+p.id+'"><b>'+esc(p.short)+'</b></a><br><span style="color:var(--muted)">'+esc(p.name)+'</span></td><td>'+esc(p.head)+'</td><td>'+pill(p)+'</td><td>'+esc(t(p.doc))+'</td></tr>';});
+  h+='</tbody></table></div>';
+  h+='<div class="grid" style="margin-top:16px">'+NOTES.map(function(n){return '<div class="note">'+esc(t(n))+'</div>';}).join('')+'</div>';
+  h+='<h2 style="margin-top:28px">'+esc(t(UI.home.h3))+'</h2>'+legend()+'<p class="lede">'+esc(t(UI.home.method))+'</p>';
+  return h;
+};
+V['como-votar']=function(){
+  var h='<h2>'+esc(t(UI.how.h))+'</h2><p class="lede">'+esc(t(UI.how.lede))+'</p><div class="grid col2">';
+  BALLOTS.forEach(function(b){h+='<div class="card ballot'+(b.sen?' sen':'')+'"><span class="pill no">'+esc(t(b.k))+'</span><h3 style="margin:8px 0 10px">'+esc(t(b.t))+'</h3><ul class="src">'+b.f.map(function(f){return '<li>'+esc(t(f))+'</li>';}).join('')+'</ul></div>';});
+  h+='</div>';
+  HOW.forEach(function(sec){h+='<div class="card" style="margin-top:14px"><h3>'+esc(t(sec.h))+'</h3><ul class="src" style="margin-top:10px;max-width:75ch">'+sec.p.map(function(p){return '<li>'+esc(t(p))+'</li>';}).join('')+'</ul>';
+    if(sec.ex){h+='<p class="meta" style="margin-top:14px"><b>'+esc(t(UI.how.ex))+'</b></p><div class="tablewrap" style="margin-top:8px"><table style="min-width:420px"><thead><tr><th>'+esc(t(UI.how.party))+'</th><th>'+esc(t(UI.how.votes))+'</th><th>÷1</th><th>÷2</th><th>÷3</th><th>÷4</th></tr></thead><tbody><tr><td>A</td><td>100.000</td><td>● 100.000</td><td>● 50.000</td><td>● 33.333</td><td>25.000</td></tr><tr><td>B</td><td>60.000</td><td>● 60.000</td><td>30.000</td><td>20.000</td><td>15.000</td></tr><tr><td>C</td><td>30.000</td><td>30.000</td><td>15.000</td><td>10.000</td><td>7.500</td></tr></tbody></table></div><p class="meta">'+esc(t(UI.how.exnote))+'</p>';}
+    h+='</div>';});
+  h+='<div class="card" style="margin-top:14px"><h3>'+esc(t(UI.how.src))+'</h3><ul class="src" style="margin-top:10px">'+HOWSRC.map(function(i){return '<li><a href="'+esc(i[1])+'" target="_blank" rel="noopener">'+esc(i[0])+'</a></li>';}).join('')+'</ul></div>';
+  return h;
+};
+V.candidaturas=function(){
+  var p=P(st.party);
+  var h='<h2>'+esc(t(UI.nav.candidaturas))+'</h2><p class="lede">'+esc(t(UI.cand.lede))+'</p>'+partyChips(st.party,false);
+  h+='<div class="card"><div class="phead"><div><h3><span class="dot" style="background:'+p.color+'"></span>'+esc(p.name)+'</h3><p class="meta"><b>'+esc(t(UI.th.head))+':</b> '+esc(p.head)+(p.nat?' · <b>'+esc(t(UI.cand.nat))+':</b> '+esc(p.nat):'')+'</p><p class="meta">'+esc(t(p.about))+'</p></div><div>'+pill(p)+'</div></div>';
+  h+='<p class="meta"><b>'+esc(t(UI.th.doc))+':</b> '+esc(t(p.doc))+'</p><div class="links">'+p.links.map(function(l){return ext(l[1],t(l[0]),'solid');}).join('')+'</div>'+legend();
+  TOPICS.forEach(function(x){h+='<div class="topic vhost"><h4>'+esc(t(x.n))+'</h4>'+props(p.props[x.id])+vbtn(p,x)+'</div>';});
+  return h+'</div>';
+};
+V.temas=function(){
+  var x=T(st.topic);
+  var h='<h2>'+esc(t(UI.nav.temas))+'</h2><p class="lede">'+esc(t(UI.tema.lede))+'</p>'+topicChips()+'<p class="meta" style="margin-bottom:8px">'+esc(t(UI.tema.filter))+'</p>'+partyChips(null,true)+legend();
+  h+='<div class="grid col2">'+PARTIES.filter(function(p){return !st.off[p.id];}).map(function(p){return '<div class="card pc vhost"><h4><span class="dot" style="background:'+p.color+'"></span>'+esc(p.short)+' '+pill(p)+'</h4>'+props(p.props[x.id])+vbtn(p,x)+'</div>';}).join('')+'</div>';
+  return h;
+};
+V.agenda=function(){
+  var h='<h2>'+esc(t(UI.nav.agenda))+'</h2><p class="lede">'+esc(t(UI.agenda.lede))+'</p><div class="card"><ol class="time">';
+  AGENDA.forEach(function(a){h+='<li'+(a.d<'2026-11-15'?' class="past"':'')+'><time datetime="'+a.d+'">'+esc(t(a.w))+'</time><div>'+esc(t(a.x))+'<small>'+esc(t(UI.agenda.src))+': <a href="'+esc(a.u)+'" target="_blank" rel="noopener">'+esc(a.s)+'</a></small></div></li>';});
+  h+='</ol></div><div class="note" style="margin-top:14px">'+esc(t(UI.agenda.where))+' <a href="https://www.ine.es/dyngs/CEL/index.htm?cid=1702" target="_blank" rel="noopener">INE · Oficina del Censo Electoral</a></div>';
+  return h;
+};
+V.datos=function(){
+  var h='<h2>'+esc(t(UI.nav.datos))+'</h2><p class="lede">'+esc(t(UI.datos.lede))+'</p>';
+  var now=Date.now(),ban=now>=Date.parse('2026-11-24T00:00:00+01:00')&&now<Date.parse('2026-11-29T20:00:00+01:00');
+  if(ban){h+='<div class="note">'+esc(t(UI.datos.ban))+'</div>';}else{h+='<div class="card"><h3>'+esc(t(UI.datos.cis))+'</h3><p class="meta">'+esc(t(UI.datos.cisnote))+'</p><div class="bars">';
+  CIS.forEach(function(c){h+='<div class="bar"><span>'+esc(c[0])+'</span><div class="track"><i style="width:'+(c[1]/40*100)+'%"></i></div><b>'+String(c[1]).replace('.',L===2?'.':',')+' %</b></div>';});
+  h+='</div><p class="meta">'+esc(t(UI.datos.seats))+'</p><div class="note">'+esc(t(UI.datos.caveat))+'</div><div class="links">'+ext('https://www.cis.es/es/w/el-psoe-lograr%C3%ADa-el-33-3-de-los-votos-en-las-elecciones-generales-del-29n','CIS · Estudio 3584','solid')+ext('https://www.eldiario.es/politica/cis-preelectoral-aleja-resto-encuestas-situa-suma-pp-vox-lejos-mayoria-absoluta_1_13658236.html','elDiario.es')+'</div></div>';}
+  h+='<h2 style="margin-top:28px">'+esc(t(UI.datos.h2))+'</h2><div class="grid col2">'+DATA.map(function(d){return '<div class="card"><h3>'+esc(t(d.n))+'</h3><p class="meta">'+esc(t(d.x))+'</p><div class="links">'+ext(d.u,d.s,'solid')+'</div></div>';}).join('')+'</div>';
+  h+='<h2 style="margin-top:28px">'+esc(t(UI.chk.h))+'</h2><p class="lede">'+esc(t(UI.chk.lede))+'</p><div class="grid col2">'+CHECK.map(function(d){return '<div class="card"><h3>'+esc(t(d.n))+'</h3><p class="meta">'+esc(t(d.x))+'</p><div class="links">'+ext(d.u,d.s,'solid')+'</div></div>';}).join('')+'</div>';
+  return h;
+};
+V.videos=function(){
+  var h='<h2>'+esc(t(UI.nav.videos))+'</h2><p class="lede">'+esc(t(UI.vid.own))+'</p><div class="grid col2">';
+  PARTIES.forEach(function(p){var ts=TOPICS.filter(function(x){return (p.props[x.id]||[]).length;});
+    h+='<div class="card pc vhost"><h4><span class="dot" style="background:'+p.color+'"></span>'+esc(p.short)+' <span style="color:var(--muted);font-weight:400">· '+ts.length+'</span></h4>'+(ts.length?'<div class="chips" style="margin:0">'+ts.map(function(x){return '<button type="button" class="chip vb" data-video="'+p.id+'-'+x.id+'">\u25B6 '+esc(t(x.n))+'</button>';}).join('')+'</div><div class="vslot"></div>':'<p class="empty">'+esc(t(UI.vid.novid))+'</p>')+'</div>';});
+  return h+'</div><div class="note" style="margin-top:14px">'+esc(t(UI.vid.silent))+'</div>';
+};
+V.fuentes=function(){
+  var h='<h2>'+esc(t(UI.nav.fuentes))+'</h2><p class="lede">'+esc(t(UI.src.lede))+'</p>';
+  SOURCES.forEach(function(g){h+='<div class="card" style="margin-bottom:14px"><h3>'+esc(t(g.n))+'</h3><ul class="src" style="margin-top:10px">'+g.i.map(function(i){return '<li><a href="'+esc(i[1])+'" target="_blank" rel="noopener">'+esc(i[0])+'</a></li>';}).join('')+'</ul></div>';});
+  h+='<div class="card" style="margin-bottom:14px"><h3>'+esc(t(UI.vid.exth))+'</h3><p class="meta">'+esc(t(UI.vid.extnote))+'</p>'+plain(EXPL.concat(DEB))+'<ul class="src" style="margin-top:8px">'+MEDIA.map(function(m){return '<li><a href="'+esc(m.u)+'" target="_blank" rel="noopener">'+esc(t(m.n))+'</a> <span style="color:var(--muted)">· '+esc(m.s)+'</span></li>';}).join('')+'</ul>'+PARTIES.map(function(p){var a=VIDS[p.id]||[];return a.length?'<p class="meta" style="margin-top:12px"><b>'+esc(p.short)+'</b></p>'+vlist(a):'';}).join('')+'</div>';
+  h+='<div class="note">'+esc(t(UI.src.limits))+'</div>';
+  return h;
+};
+function render(){
+  var r=route();
+  document.documentElement.lang=['es','ca','en'][L];
+  document.getElementById('t-title').textContent=t(UI.title);
+  document.getElementById('t-sub').textContent=t(UI.sub);
+  document.getElementById('foot').textContent=t(UI.foot);
+  document.getElementById('nav').innerHTML=ROUTES.map(function(k){return '<a href="#'+k+'"'+(k===r?' aria-current="page"':'')+'>'+esc(t(UI.nav[k]))+'</a>';}).join('');
+  [0,1,2].forEach(function(i){document.querySelector('.lang button[data-l="'+i+'"]').setAttribute('aria-pressed',String(i===L));});
+  document.getElementById('view').innerHTML=V[r]();
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button,a');if(!b)return;
+  if(b.dataset.l!==undefined){L=+b.dataset.l;try{localStorage.setItem('g29n-lang',String(L));}catch(x){}render();return;}
+  if(b.dataset.video){var host=b.closest('.vhost'),slot=host&&host.querySelector('.vslot');if(slot){slot.innerHTML='<video class="vid" controls autoplay playsinline src="videos/'+b.dataset.video+'-'+['es','ca','en'][L]+'.mp4"></video>';}return;}
+  if(b.dataset.go){st.party=b.dataset.go;return;}
+  if(b.dataset.party){if(route()==='temas'){st.off[b.dataset.party]=!st.off[b.dataset.party];}else{st.party=b.dataset.party;}render();return;}
+  if(b.dataset.topic){st.topic=b.dataset.topic;render();return;}
+});
+window.addEventListener('hashchange',function(){render();window.scrollTo(0,0);});
+render();
+})();
+</script>
+</body>
+</html>
