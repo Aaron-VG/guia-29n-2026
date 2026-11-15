@@ -725,6 +725,19 @@ var HOWSRC=[
  ["BOE · Real Decreto 806/2026 de convocatoria","https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-20742"]
 ];
 
+UI.how.vh=["Explicado en vídeo","Explicat en vídeo","Explained on video"];
+UI.how.vnote=["Dos vídeos propios, narrados, de algo más de un minuto cada uno.","Dos vídeos propis, narrats, de poc més d'un minut cadascun.","Two narrated videos made for this guide, a little over a minute each."];
+UI.how.v1=["Congreso y Senado: cómo se vota","Congrés i Senat: com es vota","Congress and Senate: how voting works"];
+UI.how.v2=["Por qué cambian los partidos según la provincia","Per què canvien els partits segons la província","Why parties differ by province"];
+HOW.push({h:["Por qué no salen los mismos partidos en todas partes","Per què no surten els mateixos partits a tot arreu","Why the parties are not the same everywhere"],p:[
+ ["España se divide en 52 circunscripciones (las 50 provincias, Ceuta y Melilla) y cada una tiene sus propias papeletas. Tu voto solo cuenta en la tuya.","Espanya es divideix en 52 circumscripcions (les 50 províncies, Ceuta i Melilla) i cadascuna té les seves pròpies paperetes. El teu vot només compta a la teva.","Spain is divided into 52 constituencies (the 50 provinces, Ceuta and Melilla), each with its own ballots. Your vote only counts in your own."],
+ ["Cada candidatura se presenta provincia a provincia ante la Junta Electoral Provincial. Ningún partido está obligado a presentarse en todas.","Cada candidatura es presenta província a província davant la Junta Electoral Provincial. Cap partit està obligat a presentar-se a totes.","Each candidature is filed province by province with the Provincial Electoral Board. No party is obliged to run everywhere."],
+ ["Hay partidos de ámbito territorial que solo concurren en su territorio: por eso ERC y Junts están en las papeletas de Cataluña y no en las de Madrid.","Hi ha partits d'àmbit territorial que només concorren al seu territori: per això ERC i Junts són a les paperetes de Catalunya i no a les de Madrid.","Territorial parties only run in their own territory: that is why ERC and Junts are on ballots in Catalonia and not in Madrid."],
+ ["Los partidos, federaciones y coaliciones sin representación en ninguna de las dos cámaras necesitan la firma de al menos el 0,1 % de los electores de la circunscripción; las agrupaciones de electores, el 1 %. Una coalición queda exenta si uno de sus partidos ya tiene representación (LOREG, art. 169.3, e Instrucción 7/2011 de la JEC).","Els partits, federacions i coalicions sense representació en cap de les dues cambres necessiten la signatura d'almenys el 0,1 % dels electors de la circumscripció; les agrupacions d'electors, l'1 %. Una coalició en queda exempta si un dels seus partits ja té representació (LOREG, art. 169.3, i Instrucció 7/2011 de la JEC).","Parties, federations and coalitions with no seats in either chamber need signatures from at least 0.1% of the constituency's voters; groupings of electors need 1%. A coalition is exempt if one of its member parties already has seats (LOREG, art. 169.3, and JEC Instruction 7/2011)."],
+ ["Los pactos también cuentan: el 29N Podemos no presenta lista propia en Cataluña y va dentro de la de ERC. Iustitia Europa solo se presenta por Madrid.","Els pactes també compten: el 29N Podem no presenta llista pròpia a Catalunya i va dins de la d'ERC. Iustitia Europa només es presenta per Madrid.","Deals matter too: on 29N Podemos files no list of its own in Catalonia and runs within ERC's. Iustitia Europa is only running in Madrid."],
+ ["La Junta Electoral revisa cada lista y solo las proclamadas llegan a la papeleta. En Barcelona hay 11 candidaturas proclamadas al Congreso.","La Junta Electoral revisa cada llista i només les proclamades arriben a la papereta. A Barcelona hi ha 11 candidatures proclamades al Congrés.","The electoral board checks each list and only proclaimed ones reach the ballot. Barcelona has 11 proclaimed Congress candidatures."]]});
+HOWSRC.push(["Junta Electoral Central · LOREG, artículo 169","https://www.juntaelectoralcentral.es/cs/jec/loreg/contenido?idContenido=2719680"],["BOE · Instrucción 7/2011 de la JEC sobre firmas de apoyo","https://www.boe.es/buscar/doc.php?id=BOE-A-2011-14814"]);
+
 </script>
 <script>
 (function(){
@@ -763,7 +776,7 @@ V.inicio=function(){
   return h;
 };
 V['como-votar']=function(){
-  var h='<h2>'+esc(t(UI.how.h))+'</h2><p class="lede">'+esc(t(UI.how.lede))+'</p><div class="grid col2">';
+  var h='<h2>'+esc(t(UI.how.h))+'</h2><p class="lede">'+esc(t(UI.how.lede))+'</p><div class="card vhost" style="margin-bottom:14px"><h3>'+esc(t(UI.how.vh))+'</h3><p class="meta">'+esc(t(UI.how.vnote))+'</p><div class="links"><button type="button" class="btn solid vb" data-video="x-como-votar">\u25B6 '+esc(t(UI.how.v1))+'</button><button type="button" class="btn solid vb" data-video="x-por-que-partidos">\u25B6 '+esc(t(UI.how.v2))+'</button></div><div class="vslot"></div></div><div class="grid col2">';
   BALLOTS.forEach(function(b){h+='<div class="card ballot'+(b.sen?' sen':'')+'"><span class="pill no">'+esc(t(b.k))+'</span><h3 style="margin:8px 0 10px">'+esc(t(b.t))+'</h3><ul class="src">'+b.f.map(function(f){return '<li>'+esc(t(f))+'</li>';}).join('')+'</ul></div>';});
   h+='</div>';
   HOW.forEach(function(sec){h+='<div class="card" style="margin-top:14px"><h3>'+esc(t(sec.h))+'</h3><ul class="src" style="margin-top:10px;max-width:75ch">'+sec.p.map(function(p){return '<li>'+esc(t(p))+'</li>';}).join('')+'</ul>';
